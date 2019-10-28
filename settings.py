@@ -1,3 +1,4 @@
+# define some colors (R, G, B)
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 DARKGREY = (40, 40, 40)
@@ -7,15 +8,17 @@ RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
 
 # game settings
-WIDTH = 1024   # 16 * 64 or 32 * 32 or 64 * 16
-HEIGHT = 768  # 16 * 48 or 32 * 24 or 64 * 12
+SETTINGS = {"ISFULLSCREEN":"True"}
+WIDTH = 1024
+HEIGHT = 768
 FPS = 60
-TITLE = "Tilemap Demo"
+TITLE = "MurderVille"
 BGCOLOR = DARKGREY
 
-
-TILESIZE = 32
+TILESIZE = 64
 GRIDWIDTH = WIDTH / TILESIZE
 GRIDHEIGHT = HEIGHT / TILESIZE
 
-#imageSettings
+#playerSettings
+PLAYER_SPEED = 200
+PLAYER_IMG = "eric.png"
