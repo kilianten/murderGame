@@ -42,8 +42,9 @@ class Game:
 
     def load_data(self):
         self.map = Map(path.join(self.game_folder, 'map.txt'))
-        img_folder = path.join(game_folder, 'images')
-        self.player_img = pg.image.load(path.join(img_folder, PLAYER_IMAGE)).convert_alpha()
+        img_folder = path.join(self.game_folder, 'images')
+        self.player_img = self.loadImage(img_folder, PLAYER_IMAGE, 32, 32)
+        self.player_walking_down = [ self.loadImage(img_folder, PLAYER_WALKING_DOWN[0], 32, 32), self.loadImage(img_folder, PLAYER_WALKING_DOWN[1], 32, 32), self.loadImage(img_folder, PLAYER_WALKING_DOWN[2], 32, 32)]
 
     def new(self):
         # initialize all variables and do all the setup for a new game
@@ -103,6 +104,10 @@ class Game:
                         print("Entering Fullscreen mode")
                         self.screen = pg.display.set_mode((WIDTH,HEIGHT), pg.FULLSCREEN)
                         SETTINGS["ISFULLSCREEN"] = "True"
+
+    def loadImage(self, folder, imageName, xscale, yscale):
+        image = pg.image.load(path.join(folder, imageName)).convert_alpha()
+        return pg.transform.scale(image, (image.get_rect().width + xscale, image.get_rect().height + yscale))
 
     def show_start_screen(self):
         pass

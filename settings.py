@@ -21,4 +21,6 @@ GRIDHEIGHT = HEIGHT / TILESIZE
 
 #playerSettings
 PLAYER_SPEED = 200
-PLAYER_IMG = "eric.png"
+PLAYER_IMAGE = "eric.png"
+PLAYER_WALKING_DOWN = ["eric-walking-01.png", "eric-walking-02.png", "eric-walking-03.png"]
+WALKING_ANIMATION_UPDATE = 200

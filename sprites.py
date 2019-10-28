@@ -6,12 +6,15 @@ class Player(pg.sprite.Sprite):
         self.groups = game.all_sprites
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pg.Surface((TILESIZE, TILESIZE))
-        self.image.fill(YELLOW)
+        self.image = game.player_img
         self.rect = self.image.get_rect()
         self.vx, self.vx = 0, 0
         self.x = x + TILESIZE
         self.y = y + TILESIZE
+        self.walking = False
+        self.current_frame = 0
+        self.last_update = 0
+        self.dir = 0
 
     def get_keys(self):
         self.vx, self.vy = 0, 0
@@ -24,10 +27,15 @@ class Player(pg.sprite.Sprite):
             self.vy = -PLAYER_SPEED
         if keys[pg.K_s]:
             self.vy = PLAYER_SPEED
+            self.dir = 2
+            self.walking = True
         if self.vx != 0 and self.vy != 0:
             #stop diagnal movement from being faster
             self.vx *= 0.7071
             self.vy *= 0.7071
+        if self.vy == 0 and self.vx == 0:
+            self.walking = False
+            self.image = self.game.player_img
 
     def collide_with_walls(self, dir):
         for wall in self.game.walls:
@@ -52,6 +60,7 @@ class Player(pg.sprite.Sprite):
                     self.rect.y = self.y
 
     def update(self):
+        self.animate()
         self.get_keys()
         self.x += self.vx * self.game.dt
         self.y += self.vy * self.game.dt
@@ -60,6 +69,14 @@ class Player(pg.sprite.Sprite):
         self.rect.y = self.y
         self.collide_with_walls('y')
 
+    def animate(self):
+        now = pg.time.get_ticks()
+        if self.walking:
+            if now - self.last_update > WALKING_ANIMATION_UPDATE:
+                self.last_update = now
+                if self.dir == 2:
+                    self.current_frame = (self.current_frame + 1) % len(self.game.player_walking_down)
+                    self.image = self.game.player_walking_down[self.current_frame]
 
 class Wall(pg.sprite.Sprite):
     def __init__(self, game, x, y):
