@@ -41,10 +41,7 @@ class Game:
 
 
     def load_data(self):
-        self.map = Map(path.join(self.game_folder, 'map.txt'))
-        img_folder = path.join(self.game_folder, 'images')
-        self.player_img = self.loadImage(img_folder, PLAYER_IMAGE, 32, 32)
-        self.player_walking_down = [ self.loadImage(img_folder, PLAYER_WALKING_DOWN[0], 32, 32), self.loadImage(img_folder, PLAYER_WALKING_DOWN[1], 32, 32), self.loadImage(img_folder, PLAYER_WALKING_DOWN[2], 32, 32)]
+        self.loadImages()
 
     def new(self):
         # initialize all variables and do all the setup for a new game
@@ -114,6 +111,16 @@ class Game:
 
     def show_go_screen(self):
         pass
+
+    def loadImages(self):
+        self.map = Map(path.join(self.game_folder, 'map.txt'))
+        img_folder = path.join(self.game_folder, 'images')
+
+        self.player_img = self.loadImage(img_folder, PLAYER_IMAGE, 32, 32)
+        self.player_img_foward = self.loadImage(img_folder, PLAYER_IMAGE_FOWARD, 32, 32)
+        self.player_walking_down = [ self.loadImage(img_folder, PLAYER_WALKING_DOWN[0], 32, 32), self.player_img, self.loadImage(img_folder, PLAYER_WALKING_DOWN[1], 32, 32), self.player_img]
+        self.player_walking_foward = [ self.loadImage(img_folder, PLAYER_WALKING_FOWARD[0], 32, 32), self.player_img_foward, self.loadImage(img_folder, PLAYER_WALKING_FOWARD[1], 32, 32), self.player_img_foward]
+
 
 # create the game object
 g = Game()

@@ -24,7 +24,9 @@ class Player(pg.sprite.Sprite):
         if keys[pg.K_d]:
             self.vx = PLAYER_SPEED
         if keys[pg.K_w]:
+            self.dir = 0
             self.vy = -PLAYER_SPEED
+            self.walking = True
         if keys[pg.K_s]:
             self.vy = PLAYER_SPEED
             self.dir = 2
@@ -71,12 +73,15 @@ class Player(pg.sprite.Sprite):
 
     def animate(self):
         now = pg.time.get_ticks()
-        if self.walking:
+        if self.walking: #walking S towards player
             if now - self.last_update > WALKING_ANIMATION_UPDATE:
                 self.last_update = now
                 if self.dir == 2:
                     self.current_frame = (self.current_frame + 1) % len(self.game.player_walking_down)
                     self.image = self.game.player_walking_down[self.current_frame]
+                if self.dir == 0:
+                    self.current_frame = (self.current_frame + 1) % len(self.game.player_walking_foward)
+                    self.image = self.game.player_walking_foward[self.current_frame]
 
 class Wall(pg.sprite.Sprite):
     def __init__(self, game, x, y):
