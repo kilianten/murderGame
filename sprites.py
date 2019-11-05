@@ -23,6 +23,8 @@ class Player(pg.sprite.Sprite):
             self.vx = -PLAYER_SPEED
         if keys[pg.K_d]:
             self.vx = PLAYER_SPEED
+            self.dir = 1
+            self.walking = True
         if keys[pg.K_w]:
             self.dir = 0
             self.vy = -PLAYER_SPEED
@@ -82,6 +84,15 @@ class Player(pg.sprite.Sprite):
                 if self.dir == 0:
                     self.current_frame = (self.current_frame + 1) % len(self.game.player_walking_foward)
                     self.image = self.game.player_walking_foward[self.current_frame]
+                if self.dir == 1:
+                    self.image = self.game.player_img_right
+        else:
+            if self.dir == 2:
+                self.image = self.game.player_img_foward
+            if self.dir == 0:
+                self.image = self.game.player_img
+            if self.dir == 1:
+                self.image = self.game.player_img_right
 
 class Wall(pg.sprite.Sprite):
     def __init__(self, game, x, y):

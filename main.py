@@ -102,7 +102,7 @@ class Game:
                         self.screen = pg.display.set_mode((WIDTH,HEIGHT), pg.FULLSCREEN)
                         SETTINGS["ISFULLSCREEN"] = "True"
 
-    def loadImage(self, folder, imageName, xscale, yscale):
+    def loadImage(self, folder, imageName, xscale=100, yscale=100):
         image = pg.image.load(path.join(folder, imageName)).convert_alpha()
         return pg.transform.scale(image, (image.get_rect().width + xscale, image.get_rect().height + yscale))
 
@@ -116,10 +116,11 @@ class Game:
         self.map = Map(path.join(self.game_folder, 'map.txt'))
         img_folder = path.join(self.game_folder, 'images')
 
-        self.player_img = self.loadImage(img_folder, PLAYER_IMAGE, 32, 32)
-        self.player_img_foward = self.loadImage(img_folder, PLAYER_IMAGE_FOWARD, 32, 32)
-        self.player_walking_down = [ self.loadImage(img_folder, PLAYER_WALKING_DOWN[0], 32, 32), self.player_img, self.loadImage(img_folder, PLAYER_WALKING_DOWN[1], 32, 32), self.player_img]
-        self.player_walking_foward = [ self.loadImage(img_folder, PLAYER_WALKING_FOWARD[0], 32, 32), self.player_img_foward, self.loadImage(img_folder, PLAYER_WALKING_FOWARD[1], 32, 32), self.player_img_foward]
+        self.player_img = self.loadImage(img_folder, PLAYER_IMAGE)
+        self.player_img_foward = self.loadImage(img_folder, PLAYER_IMAGE_FOWARD)
+        self.player_img_right = self.loadImage(img_folder, PLAYER_IMAGE_RIGHT, 32, 32)
+        self.player_walking_down = [ self.loadImage(img_folder, PLAYER_WALKING_DOWN[0]), self.player_img, self.loadImage(img_folder, PLAYER_WALKING_DOWN[1]), self.player_img]
+        self.player_walking_foward = [ self.loadImage(img_folder, PLAYER_WALKING_FOWARD[0]), self.player_img_foward, self.loadImage(img_folder, PLAYER_WALKING_FOWARD[1]), self.player_img_foward]
 
 
 # create the game object

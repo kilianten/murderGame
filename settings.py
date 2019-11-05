@@ -20,9 +20,10 @@ GRIDWIDTH = WIDTH / TILESIZE
 GRIDHEIGHT = HEIGHT / TILESIZE
 
 #playerSettings
-PLAYER_SPEED = 200
-PLAYER_IMAGE = "eric.png"
-PLAYER_IMAGE_FOWARD = "eric-foward.png"
-PLAYER_WALKING_DOWN = ["eric-walking-01.png", "eric-walking-03.png"]
-PLAYER_WALKING_FOWARD = ["eric-walking-forward-01.png", "eric-walking-forward-02.png"]
+PLAYER_SPEED = 250
+PLAYER_IMAGE = "max.png"
+PLAYER_IMAGE_FOWARD = "maxWalkingForward1.png"
+PLAYER_IMAGE_RIGHT = "eric-right.png"
+PLAYER_WALKING_DOWN = ["maxWalking1.png", "maxWalking2.png"]
+PLAYER_WALKING_FOWARD = ["maxWalkingForward2.png", "maxWalkingForward3.png"]
 WALKING_ANIMATION_UPDATE = 200
