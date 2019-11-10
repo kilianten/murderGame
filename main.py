@@ -95,14 +95,14 @@ class Game:
                     if (SETTINGS["ISFULLSCREEN"] == 'True'):
                         #if fullscreen set to window
                         print("Entering Windowed mode")
-                        self.screen = pg.display.set_mode(WIDTH,HEIGHT)
+                        self.screen = pg.display.set_mode((WIDTH,HEIGHT))
                         SETTINGS["ISFULLSCREEN"] = "False"
                     else:
                         print("Entering Fullscreen mode")
                         self.screen = pg.display.set_mode((WIDTH,HEIGHT), pg.FULLSCREEN)
                         SETTINGS["ISFULLSCREEN"] = "True"
 
-    def loadImage(self, folder, imageName, xscale=100, yscale=100):
+    def loadImage(self, folder, imageName, xscale=64, yscale=64):
         image = pg.image.load(path.join(folder, imageName)).convert_alpha()
         return pg.transform.scale(image, (image.get_rect().width + xscale, image.get_rect().height + yscale))
 
@@ -118,7 +118,7 @@ class Game:
 
         self.player_img = self.loadImage(img_folder, PLAYER_IMAGE)
         self.player_img_foward = self.loadImage(img_folder, PLAYER_IMAGE_FOWARD)
-        self.player_img_right = self.loadImage(img_folder, PLAYER_IMAGE_RIGHT, 32, 32)
+        self.player_img_right = self.loadImage(img_folder, PLAYER_IMAGE_RIGHT)
         self.player_walking_down = [ self.loadImage(img_folder, PLAYER_WALKING_DOWN[0]), self.player_img, self.loadImage(img_folder, PLAYER_WALKING_DOWN[1]), self.player_img]
         self.player_walking_foward = [ self.loadImage(img_folder, PLAYER_WALKING_FOWARD[0]), self.player_img_foward, self.loadImage(img_folder, PLAYER_WALKING_FOWARD[1]), self.player_img_foward]
 

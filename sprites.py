@@ -39,7 +39,6 @@ class Player(pg.sprite.Sprite):
             self.vy *= 0.7071
         if self.vy == 0 and self.vx == 0:
             self.walking = False
-            self.image = self.game.player_img
 
     def collide_with_walls(self, dir):
         for wall in self.game.walls:
@@ -88,9 +87,9 @@ class Player(pg.sprite.Sprite):
                     self.image = self.game.player_img_right
         else:
             if self.dir == 2:
-                self.image = self.game.player_img_foward
-            if self.dir == 0:
                 self.image = self.game.player_img
+            if self.dir == 0:
+                self.image = self.game.player_img_foward
             if self.dir == 1:
                 self.image = self.game.player_img_right
 
