@@ -119,9 +119,11 @@ class Game:
         self.player_img = self.loadImage(img_folder, PLAYER_IMAGE)
         self.player_img_foward = self.loadImage(img_folder, PLAYER_IMAGE_FOWARD)
         self.player_img_right = self.loadImage(img_folder, PLAYER_IMAGE_RIGHT)
+        self.player_img_left = pg.transform.flip(self.player_img_right, True, False)
         self.player_walking_down = [ self.loadImage(img_folder, PLAYER_WALKING_DOWN[0]), self.player_img, self.loadImage(img_folder, PLAYER_WALKING_DOWN[1]), self.player_img]
         self.player_walking_foward = [ self.loadImage(img_folder, PLAYER_WALKING_FOWARD[0]), self.player_img_foward, self.loadImage(img_folder, PLAYER_WALKING_FOWARD[1]), self.player_img_foward]
-
+        self.player_walking_right = [ self.loadImage(img_folder, PLAYER_WALKING_RIGHT[0]), self.player_img_right, self.loadImage(img_folder, PLAYER_WALKING_RIGHT[1]), self.player_img_right]
+        self.player_walking_left = [ pg.transform.flip(self.player_walking_right[0], True, False), self.player_img_left, pg.transform.flip(self.player_walking_right[2], True, False), self.player_img_left]
 
 # create the game object
 g = Game()

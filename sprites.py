@@ -20,6 +20,8 @@ class Player(pg.sprite.Sprite):
         self.vx, self.vy = 0, 0
         keys = pg.key.get_pressed()
         if keys[pg.K_a]:
+            self.dir = 3
+            self.walking = True
             self.vx = -PLAYER_SPEED
         if keys[pg.K_d]:
             self.vx = PLAYER_SPEED
@@ -77,21 +79,33 @@ class Player(pg.sprite.Sprite):
         if self.walking: #walking S towards player
             if now - self.last_update > WALKING_ANIMATION_UPDATE:
                 self.last_update = now
-                if self.dir == 2:
-                    self.current_frame = (self.current_frame + 1) % len(self.game.player_walking_down)
-                    self.image = self.game.player_walking_down[self.current_frame]
-                if self.dir == 0:
-                    self.current_frame = (self.current_frame + 1) % len(self.game.player_walking_foward)
-                    self.image = self.game.player_walking_foward[self.current_frame]
-                if self.dir == 1:
-                    self.image = self.game.player_img_right
+                self.image = self.getWalkingAnimation();
         else:
-            if self.dir == 2:
-                self.image = self.game.player_img
-            if self.dir == 0:
-                self.image = self.game.player_img_foward
-            if self.dir == 1:
-                self.image = self.game.player_img_right
+            self.image = self.getStandingSprite()
+
+    def getWalkingAnimation(self):
+        if self.dir == 2:
+            self.current_frame = (self.current_frame + 1) % len(self.game.player_walking_down)
+            return self.game.player_walking_down[self.current_frame]
+        if self.dir == 0:
+            self.current_frame = (self.current_frame + 1) % len(self.game.player_walking_foward)
+            return self.game.player_walking_foward[self.current_frame]
+        if self.dir == 1:
+            self.current_frame = (self.current_frame + 1) % len(self.game.player_walking_right)
+            return self.game.player_walking_right[self.current_frame]
+        if self.dir == 3:
+            self.current_frame = (self.current_frame + 1) % len(self.game.player_walking_left)
+            return self.game.player_walking_left[self.current_frame]
+
+    def getStandingSprite(self):
+        if self.dir == 2:
+            return self.game.player_img
+        if self.dir == 0:
+            return self.game.player_img_foward
+        if self.dir == 1:
+            return self.game.player_img_right
+        if self.dir == 3:
+            return self.game.player_img_left
 
 class Wall(pg.sprite.Sprite):
     def __init__(self, game, x, y):
