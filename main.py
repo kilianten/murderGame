@@ -24,6 +24,10 @@ class Game:
         self.clock = pg.time.Clock()
         pg.key.set_repeat(500, 100)
         self.load_data()
+        self.HUDenabled = True
+        self.gameTime = [0, 0]
+        self.last_update = 0
+        self.minuteIncrement = False
 
     def load_settings(self):
         print("Loading Settings")
@@ -76,12 +80,45 @@ class Game:
         # update portion of the game loop
         self.all_sprites.update()
         self.camera.update(self.player)
+        self.updateClock()
 
     def draw(self):
         self.screen.fill(BGCOLOR)
         for sprite in self.all_sprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
+            if self.HUDenabled == True:
+                self.drawClock()
         pg.display.flip()
+
+    def updateClock(self):
+        now = pg.time.get_ticks()
+        if now - self.last_update > CLOCK_UPDATE:
+            self.last_update = now
+
+            if self.gameTime[0] == 23 and self.gameTime[1] == 59:
+                self.day += 1 #increase day
+                self.gameTime[0], self.gameTime[1] = 0
+
+            if self.gameTime[1] == 59:
+                self.gameTime[0] += 1 #add an hour
+            self.gameTime[1] = (self.gameTime[1] + 1) % 60
+
+
+
+
+    def drawClock(self):
+        #calculate seconds
+        secondCounter = self.gameTime[1] % 10
+        tenSecondCounter = int(self.gameTime[1] / 10)
+        self.screen.blit(self.clock_number_images[tenSecondCounter], [60,10])
+        self.screen.blit(self.clock_number_images[secondCounter], [80,10])
+        #calculateHours
+        hourCounter = self.gameTime[0] % 10
+        tenHourCounter = int(self.gameTime[0] / 10)
+        self.screen.blit(self.clock_number_images[hourCounter], [30,10])
+        self.screen.blit(self.clock_number_images[tenHourCounter], [10,10])
+
+
 
     def events(self):
         # catch all events here
@@ -124,6 +161,13 @@ class Game:
         self.player_walking_foward = [ self.loadImage(img_folder, PLAYER_WALKING_FOWARD[0]), self.player_img_foward, self.loadImage(img_folder, PLAYER_WALKING_FOWARD[1]), self.player_img_foward]
         self.player_walking_right = [ self.loadImage(img_folder, PLAYER_WALKING_RIGHT[0]), self.player_img_right, self.loadImage(img_folder, PLAYER_WALKING_RIGHT[1]), self.player_img_right]
         self.player_walking_left = [ pg.transform.flip(self.player_walking_right[0], True, False), self.player_img_left, pg.transform.flip(self.player_walking_right[2], True, False), self.player_img_left]
+        self.clock_number_images = self.loadArrayOfImages(CLOCK_NUMBERS, img_folder)
+
+    def loadArrayOfImages(self, array, img_folder):
+        temp = []
+        for i in range(0, 10):
+            temp.append(self.loadImage(img_folder, CLOCK_NUMBERS[i], -32, -32))
+        return temp
 
 # create the game object
 g = Game()
