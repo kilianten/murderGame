@@ -27,7 +27,8 @@ class Game:
         self.HUDenabled = True
         self.gameTime = [0, 0]
         self.last_update = 0
-        self.minuteIncrement = False
+        self.currentDay = 0
+        self.daysRunning = 0
 
     def load_settings(self):
         print("Loading Settings")
@@ -96,8 +97,10 @@ class Game:
             self.last_update = now
 
             if self.gameTime[0] == 23 and self.gameTime[1] == 59:
-                self.day += 1 #increase day
-                self.gameTime[0], self.gameTime[1] = 0
+                self.currentDay = (self.currentDay + 1) % 7  #increase day
+                self.daysRunning += 1
+                self.gameTime[0] = 0
+                self.gameTime[1] = 0
 
             if self.gameTime[1] == 59:
                 self.gameTime[0] += 1 #add an hour
