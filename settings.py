@@ -31,4 +31,11 @@ WALKING_ANIMATION_UPDATE = 200
 
 #clock SETTINGS
 CLOCK_NUMBERS = ["clock0.png", "clock1.png", "clock2.png", "clock3.png", "clock4.png", "clock5.png", "clock6.png", "clock7.png", "clock8.png", "clock9.png"]
-CLOCK_UPDATE = 10
+CLOCK_SEMICOLON = "clockSemicolon.png"
+CLOCK_UPDATE = 1000
+
+#DateSettings
+DAYS_OF_WEEK = ["mon.png"]
+
+#items
+ACOUSTIC_GUITAR = "acousticGuitar.png"
