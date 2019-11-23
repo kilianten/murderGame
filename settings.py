@@ -39,3 +39,12 @@ DAYS_OF_WEEK = ["mon.png"]
 
 #items
 ACOUSTIC_GUITAR = "acousticGuitar.png"
+
+
+#mapColours
+LOADMAP_COLORS = {"#6aa145":"grass01"}
+
+#TILES
+BRICKWALL = "brickWall.png"
+BRICKWALL_CORNER = "brickWallCorner.png"
+GRASS01 = "grass.png"

@@ -29,6 +29,7 @@ class Game:
         self.last_update = 0
         self.currentDay = 0
         self.daysRunning = 0
+        self.debugMode = False
 
     def load_settings(self):
         print("Loading Settings")
@@ -60,6 +61,9 @@ class Game:
         self.clock_semicolon_image = self.loadImage(img_folder, CLOCK_SEMICOLON, -30, -30)
         self.days_of_week_images = self.loadArrayOfImages(DAYS_OF_WEEK, img_folder, -30, -16)
         self.acoustic_guitar = self.loadImage(img_folder, ACOUSTIC_GUITAR, 24, 58)
+        self.brickwall_image = self.loadImage(img_folder, BRICKWALL)
+        self.brickwall_corner_image = self.loadImage(img_folder, BRICKWALL_CORNER)
+        self.grass01 = self.loadImage(img_folder, GRASS01)
 
     def load_data(self):
         self.loadImages()
@@ -68,10 +72,13 @@ class Game:
         # initialize all variables and do all the setup for a new game
         self.all_sprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
+        self.collidable_sprites = pg.sprite.Group()
         for row, tiles in enumerate(self.map.data):
             for col, tile in enumerate(tiles):
                 if tile == '1':
-                    Wall(self, col, row)
+                    Wall(self, col, row, "horizontal")
+                if tile == '2':
+                    Wall(self, col, row, "corner")
                 if tile == 'P':
                     self.player = Player(self, col, row)
         self.acousticGuitar = AcousticGuitar(self, 200, 200)
@@ -107,7 +114,11 @@ class Game:
             if self.HUDenabled == True:
                 self.drawClock()
                 self.drawDay()
+        self.debug()
         pg.display.flip()
+
+    def debug(self):
+        hitbox = pg.draw.rect(self.screen, RED, self.player.hitbox, 1)
 
     def updateClock(self):
         now = pg.time.get_ticks()
@@ -128,14 +139,17 @@ class Game:
         self.gameTime[1] = 0
 
     def drawClock(self):
-        #calculate seconds
+        self.drawSeconds()
+        self.screen.blit(self.clock_semicolon_image, [165,20])
+        self.drawHours()
+
+    def drawSeconds(self):
         secondCounter = self.gameTime[1] % 10
         tenSecondCounter = int(self.gameTime[1] / 10)
         self.screen.blit(self.clock_number_images[tenSecondCounter], [180,20])
         self.screen.blit(self.clock_number_images[secondCounter], [200,20])
 
-        self.screen.blit(self.clock_semicolon_image, [165,20])
-        #calculateHours
+    def drawHours(self):
         hourCounter = self.gameTime[0] % 10
         tenHourCounter = int(self.gameTime[0] / 10)
         self.screen.blit(self.clock_number_images[hourCounter], [150,20])
@@ -163,7 +177,7 @@ class Game:
                         self.screen = pg.display.set_mode((WIDTH,HEIGHT), pg.FULLSCREEN)
                         SETTINGS["ISFULLSCREEN"] = "True"
 
-    def loadImage(self, folder, imageName, xscale=64, yscale=64):
+    def loadImage(self, folder, imageName, xscale=TILESIZE, yscale=TILESIZE):
         image = pg.image.load(path.join(folder, imageName)).convert_alpha()
         return pg.transform.scale(image, (image.get_rect().width + xscale, image.get_rect().height + yscale))
 

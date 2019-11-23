@@ -3,18 +3,22 @@ from settings import *
 
 class Player(pg.sprite.Sprite):
     def __init__(self, game, x, y):
-        self.groups = game.all_sprites
+        self.groups = game.all_sprites, game.collidable_sprites
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = game.player_img
-        self.rect = self.image.get_rect()
-        self.vx, self.vx = 0, 0
         self.x = x + TILESIZE
         self.y = y + TILESIZE
+        self.vx, self.vx = 0, 0
+        self.image = game.player_img
+        self.rect = self.image.get_rect()
         self.walking = False
         self.current_frame = 0
         self.last_update = 0
         self.dir = 0
+        self.hitbox = self.rect
+        self.hitbox = self.hitbox.inflate(-70,-80)
+        self.hitBoxOffety = 40
+
 
     def get_keys(self):
         self.vx, self.vy = 0, 0
@@ -23,18 +27,22 @@ class Player(pg.sprite.Sprite):
             self.dir = 3
             self.walking = True
             self.vx = -PLAYER_SPEED
+            self.hitbox.width = 22
         if keys[pg.K_d]:
             self.vx = PLAYER_SPEED
             self.dir = 1
             self.walking = True
+            self.hitbox.width = 22
         if keys[pg.K_w]:
             self.dir = 0
+            self.hitbox.width = 40
             self.vy = -PLAYER_SPEED
             self.walking = True
         if keys[pg.K_s]:
             self.vy = PLAYER_SPEED
             self.dir = 2
             self.walking = True
+            self.hitbox.width = 40
         if self.vx != 0 and self.vy != 0:
             #stop diagnal movement from being faster
             self.vx *= 0.7071
@@ -73,6 +81,8 @@ class Player(pg.sprite.Sprite):
         self.collide_with_walls('x')
         self.rect.y = self.y
         self.collide_with_walls('y')
+        self.hitbox.center = self.rect.center
+        self.hitbox.y += self.hitBoxOffety
 
     def animate(self):
         now = pg.time.get_ticks()
@@ -108,17 +118,21 @@ class Player(pg.sprite.Sprite):
             return self.game.player_img_left
 
 class Wall(pg.sprite.Sprite):
-    def __init__(self, game, x, y):
+    def __init__(self, game, x, y, direction):
         self.groups = game.all_sprites, game.walls
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pg.Surface((TILESIZE, TILESIZE))
-        self.image.fill(RED)
+        self.image = game.brickwall_image
         self.rect = self.image.get_rect()
         self.x = x
         self.y = y
-        self.rect.x = x * TILESIZE
-        self.rect.y = y * TILESIZE
+        if(direction == "corner"):
+            self.rect.x = x * TILESIZE
+            self.rect.y = y * TILESIZE
+        if(direction == "horizontal"):
+            self.rect.x = x * TILESIZE
+            self.rect.y = y * TILESIZE
+
 
 class AcousticGuitar(pg.sprite.Sprite):
     def __init__(self, game, x, y):
@@ -126,6 +140,8 @@ class AcousticGuitar(pg.sprite.Sprite):
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
         self.image = game.acoustic_guitar
-        self.rect = self.image.get_rect()
         self.x = x
         self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.x =  x
+        self.rect.y =  y
