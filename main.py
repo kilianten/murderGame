@@ -118,7 +118,7 @@ class Game:
         pg.display.flip()
 
     def debug(self):
-        hitbox = pg.draw.rect(self.screen, RED, self.player.hitbox, 1)
+        pg.draw.rect(self.screen, RED, self.player.hitbox, 1)
 
     def updateClock(self):
         now = pg.time.get_ticks()

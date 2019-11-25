@@ -1,0 +1,2 @@
+C0001: When player is against wall and changes from horizontal movement to vertical. Player will get stuck due to change in box
+G0001: Walls sometimes drawn over player
