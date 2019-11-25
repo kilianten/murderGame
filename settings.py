@@ -28,6 +28,7 @@ PLAYER_WALKING_DOWN = ["maxWalking1.png", "maxWalking2.png"]
 PLAYER_WALKING_FOWARD = ["maxWalkingForward2.png", "maxWalkingForward3.png"]
 PLAYER_WALKING_RIGHT = ["maxWalkinRight2.png", "maxWalkinRight3.png"]
 WALKING_ANIMATION_UPDATE = 200
+PLAYER_HITBOX_OFFSET = 40
 
 #clock SETTINGS
 CLOCK_NUMBERS = ["clock0.png", "clock1.png", "clock2.png", "clock3.png", "clock4.png", "clock5.png", "clock6.png", "clock7.png", "clock8.png", "clock9.png"]

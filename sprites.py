@@ -15,10 +15,8 @@ class Player(pg.sprite.Sprite):
         self.current_frame = 0
         self.last_update = 0
         self.dir = 0
-        self.hitbox = self.rect
-        self.hitbox = self.hitbox.inflate(-70,-80)
-        self.hitBoxOffety = 40
-
+        self.hitbox = Hitbox(self.rect)
+        self.hitbox.setDimensions(-70,-80)
 
     def get_keys(self):
         self.vx, self.vy = 0, 0
@@ -27,22 +25,22 @@ class Player(pg.sprite.Sprite):
             self.dir = 3
             self.walking = True
             self.vx = -PLAYER_SPEED
-            self.hitbox.width = 22
+            self.hitbox.setWidth(25)
         if keys[pg.K_d]:
             self.vx = PLAYER_SPEED
             self.dir = 1
             self.walking = True
-            self.hitbox.width = 22
+            self.hitbox.setWidth(25)
         if keys[pg.K_w]:
             self.dir = 0
-            self.hitbox.width = 40
+            self.hitbox.setWidth(40)
             self.vy = -PLAYER_SPEED
             self.walking = True
         if keys[pg.K_s]:
             self.vy = PLAYER_SPEED
             self.dir = 2
             self.walking = True
-            self.hitbox.width = 40
+            self.hitbox.setWidth(40)
         if self.vx != 0 and self.vy != 0:
             #stop diagnal movement from being faster
             self.vx *= 0.7071
@@ -50,39 +48,38 @@ class Player(pg.sprite.Sprite):
         if self.vy == 0 and self.vx == 0:
             self.walking = False
 
-    def collide_with_walls(self, dir):
+    def collide_with_walls(self, dir, hitbox):
         for wall in self.game.walls:
             if dir == 'x':
-                hits = pg.sprite.spritecollide(self, self.game.walls, False)
+                hits = pg.sprite.spritecollide(hitbox, self.game.walls, False)
                 if hits:
-                    if self.vx > 0:
-                        self.x = hits[0].rect.left - self.rect.width
-                    if self.vx < 0:
-                        self.x = hits[0].rect.right
-                    self.vx = 0
-                    self.rect.x = self.x
+                    return True
 
             if dir == 'y':
-                hits = pg.sprite.spritecollide(self, self.game.walls, False)
+                hits = pg.sprite.spritecollide(self.hitbox, self.game.walls, False)
                 if hits:
-                    if self.vy > 0:
-                        self.y = hits[0].rect.top - self.rect.height
-                    if self.vy < 0:
-                        self.y = hits[0].rect.bottom
-                    self.yx = 0
-                    self.rect.y = self.y
+                    return True
+        return False
 
     def update(self):
         self.animate()
         self.get_keys()
-        self.x += self.vx * self.game.dt
-        self.y += self.vy * self.game.dt
-        self.rect.x = self.x
-        self.collide_with_walls('x')
-        self.rect.y = self.y
-        self.collide_with_walls('y')
-        self.hitbox.center = self.rect.center
-        self.hitbox.y += self.hitBoxOffety
+        self.rect.x
+
+        self.temp = Hitbox(self.hitbox.rect)
+        self.temp.rect.x += self.vx * self.game.dt
+
+
+        if(not self.collide_with_walls('x', self.temp)):
+            self.x += self.vx * self.game.dt
+            self.rect.x = self.x
+
+        self.temp.rect.y += self.vy * self.game.dt
+        if(not self.collide_with_walls('y', self.temp)):
+            self.y += self.vy * self.game.dt
+            self.rect.y = self.y
+
+        self.hitbox.setPosition(self.rect.center, 0, PLAYER_HITBOX_OFFSET)
 
     def animate(self):
         now = pg.time.get_ticks()
@@ -145,3 +142,21 @@ class AcousticGuitar(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x =  x
         self.rect.y =  y
+
+class Hitbox(pg.sprite.Sprite):
+    def __init__(self, startingRect):
+        self.rect = startingRect
+
+    def setPosition(self, center, xOffset, yOffset):
+        self.rect.center = center
+        self.rect.y += yOffset
+        self.rect.x += xOffset
+
+    def setDimensions(self, x, y):
+        self.rect = self.rect.inflate(x, y)
+
+    def setWidth(self, width):
+        self.rect.width = width
+
+    def setHeight(self, height):
+        self.rect.height = height
