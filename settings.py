@@ -49,3 +49,7 @@ LOADMAP_COLORS = {"#6aa145":"grass01"}
 BRICKWALL = "brickWall.png"
 BRICKWALL_CORNER = "brickWallCorner.png"
 GRASS01 = "grass.png"
+
+#TOWNSPEOPLE
+#Priest
+PRIEST_IMAGE = "priest.png"

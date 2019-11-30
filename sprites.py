@@ -66,16 +66,14 @@ class Player(pg.sprite.Sprite):
         self.get_keys()
         self.rect.x
 
-        self.temp = Hitbox(self.hitbox.rect)
-        self.temp.rect.x += self.vx * self.game.dt
-
-
-        if(not self.collide_with_walls('x', self.temp)):
+        checkHitbox = Hitbox(self.hitbox.rect)
+        checkHitbox.rect.x += self.vx * self.game.dt
+        if(not self.collide_with_walls('x', checkHitbox)):
             self.x += self.vx * self.game.dt
             self.rect.x = self.x
 
-        self.temp.rect.y += self.vy * self.game.dt
-        if(not self.collide_with_walls('y', self.temp)):
+        checkHitbox.rect.y += self.vy * self.game.dt
+        if(not self.collide_with_walls('y', checkHitbox)):
             self.y += self.vy * self.game.dt
             self.rect.y = self.y
 
@@ -130,7 +128,6 @@ class Wall(pg.sprite.Sprite):
             self.rect.x = x * TILESIZE
             self.rect.y = y * TILESIZE
 
-
 class AcousticGuitar(pg.sprite.Sprite):
     def __init__(self, game, x, y):
         self.groups = game.all_sprites
@@ -160,3 +157,28 @@ class Hitbox(pg.sprite.Sprite):
 
     def setHeight(self, height):
         self.rect.height = height
+
+class Person(pg.sprite.Sprite):
+    def __init__(self, game, x, y, image):
+        self.groups = game.all_sprites, game.collidable_sprites, game.townspeople
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        self.x = x + TILESIZE
+        self.y = y + TILESIZE
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.walking = False
+        self.current_frame = 0
+        self.last_update = 0
+        self.dir = 0
+        self.hitbox = Hitbox(self.rect)
+        self.hitbox.setDimensions(-70,-80)
+
+    def update(self):
+        self.y += 1
+        self.rect.y = self.y
+        self.dir = 1
+        self.walking = True
+
+class Priest(Person):
+    pass

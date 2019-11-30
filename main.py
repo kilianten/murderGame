@@ -60,10 +60,11 @@ class Game:
         self.clock_number_images = self.loadArrayOfImages(CLOCK_NUMBERS, img_folder, -30, -30)
         self.clock_semicolon_image = self.loadImage(img_folder, CLOCK_SEMICOLON, -30, -30)
         self.days_of_week_images = self.loadArrayOfImages(DAYS_OF_WEEK, img_folder, -30, -16)
-        self.acoustic_guitar = self.loadImage(img_folder, ACOUSTIC_GUITAR, 24, 58)
+        self.acoustic_guitar = self.loadImage(img_folder, ACOUSTIC_GUITAR, 26, 52)
         self.brickwall_image = self.loadImage(img_folder, BRICKWALL)
         self.brickwall_corner_image = self.loadImage(img_folder, BRICKWALL_CORNER)
         self.grass01 = self.loadImage(img_folder, GRASS01)
+        self.priest_img = self.loadImage(img_folder, PRIEST_IMAGE)
 
     def load_data(self):
         self.loadImages()
@@ -73,6 +74,7 @@ class Game:
         self.all_sprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
         self.collidable_sprites = pg.sprite.Group()
+        self.townspeople = pg.sprite.Group()
         for row, tiles in enumerate(self.map.data):
             for col, tile in enumerate(tiles):
                 if tile == '1':
@@ -83,6 +85,7 @@ class Game:
                     self.player = Player(self, col, row)
         self.acousticGuitar = AcousticGuitar(self, 200, 200)
         self.camera = Camera(self.map.width, self.map.height)
+        self.spawnTownspeople()
 
     def run(self):
         # game loop - set self.playing = False to end the game
@@ -116,6 +119,9 @@ class Game:
                 self.drawDay()
         self.debug()
         pg.display.flip()
+
+    def spawnTownspeople(self):
+        Priest(self, 600, 400, self.priest_img)
 
     def debug(self):
         pg.draw.rect(self.screen, RED, self.player.hitbox, 1)
@@ -192,6 +198,8 @@ class Game:
         for i in range(0, len(array)):
             temp.append(self.loadImage(img_folder, array[i], xScale, yScale))
         return temp
+
+
 
 # create the game object
 g = Game()
