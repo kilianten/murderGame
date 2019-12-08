@@ -40,10 +40,11 @@ class CameraView:
         self.camera = pg.Rect(0, 0, WIDTH, HEIGHT)
 
 class SquareGrid:
-    def __init__(self, width, height):
+    def __init__(self, width, height, game):
         self.width = width
         self.height = height
         self.walls = []
+        self.game = game
         self.connections = [vec(1,0), vec(-1, 0), vec(0,1), vec(0, -1)]
 
     def in_bounds(self, node):
@@ -60,5 +61,7 @@ class SquareGrid:
         return neighbors
 
     def draw(self):
-        for wall in self.game.walls:
+        for wall in self.walls:
             print(wall)
+            rect = pg.Rect(wall * TILESIZE, (TILESIZE, TILESIZE))
+            pg.draw.rect(self.game.screen, LIGHTGREY, rect.move(self.game.camera.camera.topleft))

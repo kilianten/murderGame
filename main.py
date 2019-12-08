@@ -90,10 +90,8 @@ class Game:
     def run(self):
         # game loop - set self.playing = False to end the game
         self.playing = True
-        g = SquareGrid(5,4)
-        g.walls = [vec(2,1), vec(2,2)]
-        g.find_neighbors(vec(0,0))
-        g.find_neighbors(vec(3,2))
+
+        self.createGrid() #create Grid used by AI
 
         while self.playing:
             self.dt = self.clock.tick(FPS) / 1000
@@ -127,6 +125,10 @@ class Game:
         pg.display.flip()
 
     def drawGrid(self):
+
+        cameraPosition = self.camera.camera.topleft
+        print(cameraPosition)
+
         for x in range(0, WIDTH, TILESIZE):
             pg.draw.line(self.screen, LIGHTGREY, (x, 0), (x, HEIGHT))
         for y in range(0, HEIGHT, TILESIZE):
@@ -136,8 +138,10 @@ class Game:
         Priest(self, 600, 400, self.priest_img)
 
     def debug(self):
-        pg.draw.rect(self.screen, RED, self.player.hitbox, 1)
+        pg.draw.rect(self.screen, RED, self.player.hitbox.rect.move(self.camera.camera.topleft), 1)
         self.drawGrid()
+        self.grid.draw()
+
 
     def updateClock(self):
         now = pg.time.get_ticks()
@@ -212,6 +216,12 @@ class Game:
             temp.append(self.loadImage(img_folder, array[i], xScale, yScale))
         return temp
 
+    def createGrid(self):
+        self.grid = SquareGrid(WIDTH/64, HEIGHT/64, self)
+        for wall in self.walls:
+            self.grid.walls.append(vec(wall.x, wall.y))
+        self.grid.find_neighbors(vec(0,0))
+        self.grid.find_neighbors(vec(3,2))
 
 
 # create the game object
