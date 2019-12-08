@@ -29,7 +29,7 @@ class Game:
         self.last_update = 0
         self.currentDay = 0
         self.daysRunning = 0
-        self.debugMode = False
+        self.isDebugMode = False
 
     def load_settings(self):
         print("Loading Settings")
@@ -61,7 +61,7 @@ class Game:
         self.clock_semicolon_image = self.loadImage(img_folder, CLOCK_SEMICOLON, -30, -30)
         self.days_of_week_images = self.loadArrayOfImages(DAYS_OF_WEEK, img_folder, -30, -16)
         self.acoustic_guitar = self.loadImage(img_folder, ACOUSTIC_GUITAR, 26, 52)
-        self.brickwall_image = self.loadImage(img_folder, BRICKWALL)
+        self.brickwall_image = self.loadImage(img_folder, BRICKWALL, 32, 32)
         self.brickwall_corner_image = self.loadImage(img_folder, BRICKWALL_CORNER)
         self.grass01 = self.loadImage(img_folder, GRASS01)
         self.priest_img = self.loadImage(img_folder, PRIEST_IMAGE)
@@ -90,6 +90,11 @@ class Game:
     def run(self):
         # game loop - set self.playing = False to end the game
         self.playing = True
+        g = SquareGrid(5,4)
+        g.walls = [vec(2,1), vec(2,2)]
+        g.find_neighbors(vec(0,0))
+        g.find_neighbors(vec(3,2))
+
         while self.playing:
             self.dt = self.clock.tick(FPS) / 1000
             self.events()
@@ -117,14 +122,22 @@ class Game:
             if self.HUDenabled == True:
                 self.drawClock()
                 self.drawDay()
-        self.debug()
+        if self.isDebugMode:
+            self.debug()
         pg.display.flip()
+
+    def drawGrid(self):
+        for x in range(0, WIDTH, TILESIZE):
+            pg.draw.line(self.screen, LIGHTGREY, (x, 0), (x, HEIGHT))
+        for y in range(0, HEIGHT, TILESIZE):
+            pg.draw.line(self.screen, LIGHTGREY, (0, y), (WIDTH, y))
 
     def spawnTownspeople(self):
         Priest(self, 600, 400, self.priest_img)
 
     def debug(self):
         pg.draw.rect(self.screen, RED, self.player.hitbox, 1)
+        self.drawGrid()
 
     def updateClock(self):
         now = pg.time.get_ticks()

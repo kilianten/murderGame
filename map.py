@@ -1,5 +1,6 @@
 import pygame as pg
 from settings import *
+vec = pg.math.Vector2
 
 class Map:
     def __init__(self, filename):
@@ -37,3 +38,27 @@ class Camera:
 class CameraView:
     def __init__(self):
         self.camera = pg.Rect(0, 0, WIDTH, HEIGHT)
+
+class SquareGrid:
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+        self.walls = []
+        self.connections = [vec(1,0), vec(-1, 0), vec(0,1), vec(0, -1)]
+
+    def in_bounds(self, node):
+        return 0 <= node.x < self.width and 0 <= node.y < self.height
+
+    def passable(self, node):
+        pass
+
+    def find_neighbors(self, node):
+        neighbors = [node + connection for connection in self.connections]
+        neighbors = filter(self.in_bounds, neighbors)
+        neighbors = filter(self.passable, neighbors)
+        print(list(neighbors))
+        return neighbors
+
+    def draw(self):
+        for wall in self.game.walls:
+            print(wall)

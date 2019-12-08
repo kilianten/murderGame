@@ -46,7 +46,7 @@ ACOUSTIC_GUITAR = "acousticGuitar.png"
 LOADMAP_COLORS = {"#6aa145":"grass01"}
 
 #TILES
-BRICKWALL = "brickWall.png"
+BRICKWALL = "brickWall32.png"
 BRICKWALL_CORNER = "brickWallCorner.png"
 GRASS01 = "grass.png"
 

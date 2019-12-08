@@ -17,6 +17,7 @@ class Player(pg.sprite.Sprite):
         self.dir = 0
         self.hitbox = Hitbox(self.rect)
         self.hitbox.setDimensions(-70,-80)
+        self.isDebugModePressed = False
 
     def get_keys(self):
         self.vx, self.vy = 0, 0
@@ -41,6 +42,12 @@ class Player(pg.sprite.Sprite):
             self.dir = 2
             self.walking = True
             self.hitbox.setWidth(40)
+        if keys[pg.K_SLASH]:
+            self.isDebugModePressed = True
+        if self.isDebugModePressed == True and not keys[pg.K_SLASH]: #check if key released
+            self.game.isDebugMode = not self.game.isDebugMode
+            self.isDebugModePressed = False
+
         if self.vx != 0 and self.vy != 0:
             #stop diagnal movement from being faster
             self.vx *= 0.7071
