@@ -1,5 +1,6 @@
 import pygame as pg
 from settings import *
+from collections import deque
 vec = pg.math.Vector2
 
 class Map:
@@ -51,17 +52,33 @@ class SquareGrid:
         return 0 <= node.x < self.width and 0 <= node.y < self.height
 
     def passable(self, node):
-        pass
+        return node not in self.walls
 
     def find_neighbors(self, node):
         neighbors = [node + connection for connection in self.connections]
         neighbors = filter(self.in_bounds, neighbors)
         neighbors = filter(self.passable, neighbors)
-        print(list(neighbors))
         return neighbors
 
     def draw(self):
         for wall in self.walls:
-            print(wall)
             rect = pg.Rect(wall * TILESIZE, (TILESIZE, TILESIZE))
             pg.draw.rect(self.game.screen, LIGHTGREY, rect.move(self.game.camera.camera.topleft))
+
+    def vec2int(self,v):
+        return (int(v[0]), int(v[1]))
+
+    def breath_first_search(self, start, graph):
+        frontier = deque()
+        frontier.append(start)
+        path = {}
+        path[self.vec2int(start)] = None
+        visited = []
+        visited.append(self.vec2int(start))
+        while len(frontier) > 0:
+            current = frontier.popleft()
+            for next in graph.find_neighbors(current):
+                if self.vec2int(next) not in path:
+                    frontier.append(next)
+                    path[self.vec2int(next)] = current - next
+        return path

@@ -65,6 +65,7 @@ class Game:
         self.brickwall_corner_image = self.loadImage(img_folder, BRICKWALL_CORNER)
         self.grass01 = self.loadImage(img_folder, GRASS01)
         self.priest_img = self.loadImage(img_folder, PRIEST_IMAGE)
+        self.loadIcons(img_folder)
 
     def load_data(self):
         self.loadImages()
@@ -83,15 +84,16 @@ class Game:
                     Wall(self, col, row, "corner")
                 if tile == 'P':
                     self.player = Player(self, col, row)
-        self.acousticGuitar = AcousticGuitar(self, 200, 200)
+        self.acousticGuitar = AcousticGuitar(self, 2000, 200)
         self.camera = Camera(self.map.width, self.map.height)
         self.spawnTownspeople()
 
     def run(self):
         # game loop - set self.playing = False to end the game
         self.playing = True
-
         self.createGrid() #create Grid used by AI
+        start = (3, 0)
+        self.path = self.grid.breath_first_search(start, self.grid)
 
         while self.playing:
             self.dt = self.clock.tick(FPS) / 1000
@@ -117,9 +119,9 @@ class Game:
         self.screen.fill(BGCOLOR)
         for sprite in self.all_sprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
-            if self.HUDenabled == True:
-                self.drawClock()
-                self.drawDay()
+        if self.HUDenabled == True:
+            self.drawClock()
+            self.drawDay()
         if self.isDebugMode:
             self.debug()
         pg.display.flip()
@@ -127,8 +129,6 @@ class Game:
     def drawGrid(self):
 
         cameraPosition = self.camera.camera.topleft
-        print(cameraPosition)
-
         for x in range(0, WIDTH, TILESIZE):
             pg.draw.line(self.screen, LIGHTGREY, (x, 0), (x, HEIGHT))
         for y in range(0, HEIGHT, TILESIZE):
@@ -141,7 +141,15 @@ class Game:
         pg.draw.rect(self.screen, RED, self.player.hitbox.rect.move(self.camera.camera.topleft), 1)
         self.drawGrid()
         self.grid.draw()
-
+        for node, dir in self.path.items():
+            if dir:
+                x, y = node
+                x = x * TILESIZE + TILESIZE/ 2
+                y = y * TILESIZE + TILESIZE/ 2
+                img = self.arrows[dir.x, dir.y]
+                r = img.get_rect(center = (x, y))
+                r = r.move(self.camera.camera.topleft)
+                self.screen.blit(img, r)
 
     def updateClock(self):
         now = pg.time.get_ticks()
@@ -204,6 +212,18 @@ class Game:
         image = pg.image.load(path.join(folder, imageName)).convert_alpha()
         return pg.transform.scale(image, (image.get_rect().width + xscale, image.get_rect().height + yscale))
 
+    def loadIcon(self, folder, imageName, xscale=-80, yscale=-80):
+        image = pg.image.load(path.join(folder, imageName)).convert_alpha()
+        return pg.transform.scale(image, (image.get_rect().width + xscale, image.get_rect().height + yscale))
+
+    def loadIcons(self, folder):
+        self.icon_image_arrows = {}
+        arrow = self.loadIcon(folder, ARROW_RIGHT)
+        self.icon_home_image = self.loadIcon(folder, ICON_HOME)
+        self.arrows = {}
+        for dir in [(1, 0), (0, 1), (-1, 0), (0, -1)]:
+            self.arrows[dir] = pg.transform.rotate(arrow, vec(dir).angle_to(vec(1,0)))
+
     def show_start_screen(self):
         pass
 
@@ -217,11 +237,9 @@ class Game:
         return temp
 
     def createGrid(self):
-        self.grid = SquareGrid(WIDTH/64, HEIGHT/64, self)
+        self.grid = SquareGrid(self.map.width/64, self.map.height/64, self)
         for wall in self.walls:
             self.grid.walls.append(vec(wall.x, wall.y))
-        self.grid.find_neighbors(vec(0,0))
-        self.grid.find_neighbors(vec(3,2))
 
 
 # create the game object

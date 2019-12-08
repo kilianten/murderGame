@@ -53,3 +53,8 @@ GRASS01 = "grass.png"
 #TOWNSPEOPLE
 #Priest
 PRIEST_IMAGE = "priest.png"
+
+#HUD
+ICON_HOME = "home.png"
+ARROW_RIGHT = "arrowRight.png"
+ICON_SIZE = 5
