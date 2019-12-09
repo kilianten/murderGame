@@ -4,21 +4,17 @@ from collections import deque
 vec = pg.math.Vector2
 
 class Map:
-    def __init__(self, filename):
-        self.data = []
-        with open(filename, 'rt') as f:
-            for line in f:
-                self.data.append(line.strip())
-
-        self.tilewidth = len(self.data[0])
-        self.tileheight = len(self.data)
+    def __init__(self, pathToImage):
+        self.mapImage = pg.image.load(pathToImage).convert_alpha()
+        self.tilewidth = self.mapImage.get_width()
+        self.tileheight = self.mapImage.get_height()
         self.width = self.tilewidth * TILESIZE
         self.height = self.tileheight * TILESIZE
 
 class Camera:
     def __init__(self, width, height):
         self.camera = pg.Rect(0, 0, width, height)
-        self.rect = pg.Rect(0, 0, 1, 1)
+        self.rect = self.camera
         self.width = width
         self.height = height
 
@@ -35,6 +31,9 @@ class Camera:
         x = max(-(self.width - WIDTH), x)
         y = max(-(self.height - HEIGHT), y)
         self.camera = pg.Rect(x, y, self.width, self.height)
+        self.rect = self.camera
+        print(self.rect.x)
+        print(self.rect.y)
 
 class CameraView:
     def __init__(self):

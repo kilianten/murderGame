@@ -41,10 +41,6 @@ DAYS_OF_WEEK = ["mon.png"]
 #items
 ACOUSTIC_GUITAR = "acousticGuitar.png"
 
-
-#mapColours
-LOADMAP_COLORS = {"#6aa145":"grass01"}
-
 #TILES
 BRICKWALL = "brickWall32.png"
 BRICKWALL_CORNER = "brickWallCorner.png"
@@ -58,3 +54,10 @@ PRIEST_IMAGE = "priest.png"
 ICON_HOME = "home.png"
 ARROW_RIGHT = "arrowRight.png"
 ICON_SIZE = 5
+
+#MAPFILES
+DEFAULT_MAP = "map1.png"
+
+#mapColours GUIDE
+#77A856:grass01
+#773228:brickwall

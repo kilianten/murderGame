@@ -46,8 +46,8 @@ class Game:
         f.close()
 
     def loadImages(self):
-        self.map = Map(path.join(self.game_folder, 'map.txt'))
         img_folder = path.join(self.game_folder, 'images')
+        self.map = Map(path.join(img_folder, DEFAULT_MAP))
 
         self.player_img = self.loadImage(img_folder, PLAYER_IMAGE)
         self.player_img_foward = self.loadImage(img_folder, PLAYER_IMAGE_FOWARD)
@@ -76,17 +76,23 @@ class Game:
         self.walls = pg.sprite.Group()
         self.collidable_sprites = pg.sprite.Group()
         self.townspeople = pg.sprite.Group()
-        for row, tiles in enumerate(self.map.data):
-            for col, tile in enumerate(tiles):
-                if tile == '1':
-                    Wall(self, col, row, "horizontal")
-                if tile == '2':
-                    Wall(self, col, row, "corner")
-                if tile == 'P':
-                    self.player = Player(self, col, row)
+        self.loadMap(self.map)
         self.acousticGuitar = AcousticGuitar(self, 2000, 200)
         self.camera = Camera(self.map.width, self.map.height)
         self.spawnTownspeople()
+
+    def loadMap(self, map):
+        for x in range(map.tilewidth):
+            for y in range(map.tileheight):
+                colour = map.mapImage.get_at((x,y))
+                print(colour)
+                if colour == (119, 50, 40, 255):
+                    Wall(self, x, y, "horizontal")
+                if colour == '2':
+                    Wall(self, col, row, "corner")
+                if colour == (105, 106, 106, 255):
+                    self.player = Player(self, 300, 300)
+
 
     def run(self):
         # game loop - set self.playing = False to end the game
@@ -117,17 +123,16 @@ class Game:
 
     def draw(self):
         self.screen.fill(BGCOLOR)
+        if self.isDebugMode:
+            self.debug()
         for sprite in self.all_sprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
         if self.HUDenabled == True:
             self.drawClock()
             self.drawDay()
-        if self.isDebugMode:
-            self.debug()
         pg.display.flip()
 
     def drawGrid(self):
-
         cameraPosition = self.camera.camera.topleft
         for x in range(0, WIDTH, TILESIZE):
             pg.draw.line(self.screen, LIGHTGREY, (x, 0), (x, HEIGHT))
@@ -212,7 +217,7 @@ class Game:
         image = pg.image.load(path.join(folder, imageName)).convert_alpha()
         return pg.transform.scale(image, (image.get_rect().width + xscale, image.get_rect().height + yscale))
 
-    def loadIcon(self, folder, imageName, xscale=-80, yscale=-80):
+    def loadIcon(self, folder, imageName, xscale=-40, yscale=-40):
         image = pg.image.load(path.join(folder, imageName)).convert_alpha()
         return pg.transform.scale(image, (image.get_rect().width + xscale, image.get_rect().height + yscale))
 
