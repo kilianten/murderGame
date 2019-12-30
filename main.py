@@ -85,7 +85,6 @@ class Game:
         for x in range(map.tilewidth):
             for y in range(map.tileheight):
                 colour = map.mapImage.get_at((x,y))
-                print(colour)
                 if colour == (119, 50, 40, 255):
                     Wall(self, x, y, "horizontal")
                 if colour == '2':
@@ -97,9 +96,6 @@ class Game:
     def run(self):
         # game loop - set self.playing = False to end the game
         self.playing = True
-        self.createGrid() #create Grid used by AI
-        start = (3, 0)
-        self.path = self.grid.breath_first_search(start, self.grid)
 
         while self.playing:
             self.dt = self.clock.tick(FPS) / 1000
@@ -145,16 +141,16 @@ class Game:
     def debug(self):
         pg.draw.rect(self.screen, RED, self.player.hitbox.rect.move(self.camera.camera.topleft), 1)
         self.drawGrid()
-        self.grid.draw()
-        for node, dir in self.path.items():
-            if dir:
-                x, y = node
-                x = x * TILESIZE + TILESIZE/ 2
-                y = y * TILESIZE + TILESIZE/ 2
-                img = self.arrows[dir.x, dir.y]
-                r = img.get_rect(center = (x, y))
-                r = r.move(self.camera.camera.topleft)
-                self.screen.blit(img, r)
+        for person in self.townspeople:
+            for node, dir in person.path.items():
+                if dir:
+                    x, y = node
+                    x = x * TILESIZE + TILESIZE/ 2
+                    y = y * TILESIZE + TILESIZE/ 2
+                    img = self.arrows[dir.x, dir.y]
+                    r = img.get_rect(center = (x, y))
+                    r = r.move(self.camera.camera.topleft)
+                    self.screen.blit(img, r)
 
     def updateClock(self):
         now = pg.time.get_ticks()
@@ -240,11 +236,6 @@ class Game:
         for i in range(0, len(array)):
             temp.append(self.loadImage(img_folder, array[i], xScale, yScale))
         return temp
-
-    def createGrid(self):
-        self.grid = SquareGrid(self.map.width/64, self.map.height/64, self)
-        for wall in self.walls:
-            self.grid.walls.append(vec(wall.x, wall.y))
 
 
 # create the game object

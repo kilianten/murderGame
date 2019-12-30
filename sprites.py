@@ -1,5 +1,7 @@
 import pygame as pg
 from settings import *
+from collections import deque
+vec = pg.math.Vector2
 
 class Player(pg.sprite.Sprite):
     def __init__(self, game, x, y):
@@ -180,6 +182,9 @@ class Person(pg.sprite.Sprite):
         self.dir = 0
         self.hitbox = Hitbox(self.rect)
         self.hitbox.setDimensions(-70,-80)
+        self.createGrid()
+        start = (3, 0)
+        self.path = self.grid.breath_first_search(start, self.grid)
 
     def update(self):
         self.y += 1
@@ -187,5 +192,48 @@ class Person(pg.sprite.Sprite):
         self.dir = 1
         self.walking = True
 
+    def createGrid(self):
+        self.grid = SquareGrid(self.game.map.width/64, self.game.map.height/64, self)
+        for wall in self.game.walls:
+            self.grid.walls.append(vec(wall.x, wall.y))
+
 class Priest(Person):
     pass
+
+class SquareGrid:
+    def __init__(self, width, height, game):
+        self.width = width
+        self.height = height
+        self.walls = []
+        self.game = game
+        self.connections = [vec(1,0), vec(-1, 0), vec(0,1), vec(0, -1)]
+
+    def in_bounds(self, node):
+        return 0 <= node.x < self.width and 0 <= node.y < self.height
+
+    def passable(self, node):
+        return node not in self.walls
+
+    def find_neighbors(self, node):
+        neighbors = [node + connection for connection in self.connections]
+        neighbors = filter(self.in_bounds, neighbors)
+        neighbors = filter(self.passable, neighbors)
+        return neighbors
+
+    def vec2int(self, v):
+        return (int(v[0]), int(v[1]))
+
+    def breath_first_search(self, start, graph):
+        frontier = deque()
+        frontier.append(start)
+        path = {}
+        path[self.vec2int(start)] = None
+        visited = []
+        visited.append(self.vec2int(start))
+        while len(frontier) > 0:
+            current = frontier.popleft()
+            for next in graph.find_neighbors(current):
+                if self.vec2int(next) not in path:
+                    frontier.append(next)
+                    path[self.vec2int(next)] = current - next
+        return path
