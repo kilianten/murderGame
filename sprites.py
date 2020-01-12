@@ -183,10 +183,10 @@ class Person(pg.sprite.Sprite):
         self.dir = 0
         self.hitbox = Hitbox(self.rect)
         self.hitbox.setDimensions(-70,-80)
-        self.start = vec(50, 2)
+        self.start = vec(40, 2)
         self.goal = vec(1, 2)
         self.grid = WeightedGrid(self.game)
-        self.path = self.grid.dijkstra_search(self.grid, self.goal,self.start)
+        self.path = self.grid.a_star_search(self.grid, self.goal,self.start)
 
     def vec2int(self, v):
         return (int(v.x), int(v.y))
@@ -255,7 +255,7 @@ class SquareGrid:
         return (int(v.x), int(v.y))
 
     def heuristic(self, node1, node2):
-        return (abs(node1.x - node2.y) + abs(node1.y - node2.y)) * 10
+        return (abs(node1.x - node2.x) + abs(node1.y - node2.y)) * 10
 
     def breadth_first_search(self, graph, start, end):
         frontier = deque()
@@ -273,6 +273,28 @@ class SquareGrid:
         return path
 
     def dijkstra_search(self, graph, start, end):
+        frontier = PriorityQueue()
+        frontier.put(self.vec2int(start), 0)
+        path = {}
+        cost = {}
+        path[self.vec2int(start)] = None
+        cost[self.vec2int(start)] = 0
+
+        while not frontier.empty():
+            current = frontier.get()
+            if current == end:
+                break
+            for next in graph.find_neighbors(vec(current)):
+                next = self.vec2int(next)
+                next_cost = cost[current] + graph.cost(current, next)
+                if next not in cost or next_cost < cost[next]:
+                    cost[next] = next_cost
+                    priority = next_cost + self.heuristic(end, vec(next))
+                    frontier.put(next, priority)
+                    path[next] = vec(current) - vec(next)
+        return path
+
+    def a_star_search(self, graph, start, end):
         frontier = PriorityQueue()
         frontier.put(self.vec2int(start), 0)
         path = {}
