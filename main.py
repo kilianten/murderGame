@@ -92,7 +92,6 @@ class Game:
                 if colour == (105, 106, 106, 255):
                     self.player = Player(self, 300, 300)
 
-
     def run(self):
         # game loop - set self.playing = False to end the game
         self.playing = True

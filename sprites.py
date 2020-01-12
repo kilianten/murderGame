@@ -1,6 +1,7 @@
 import pygame as pg
 from settings import *
 from collections import deque
+import heapq
 vec = pg.math.Vector2
 
 class Player(pg.sprite.Sprite):
@@ -182,10 +183,10 @@ class Person(pg.sprite.Sprite):
         self.dir = 0
         self.hitbox = Hitbox(self.rect)
         self.hitbox.setDimensions(-70,-80)
-        self.start = vec(14, 0)
-        self.goal = vec(2, 2)
-        self.grid = SquareGrid(self.game)
-        self.path = self.grid.breadth_first_search(self.grid, self.goal,self.start)
+        self.start = vec(50, 2)
+        self.goal = vec(1, 2)
+        self.grid = WeightedGrid(self.game)
+        self.path = self.grid.dijkstra_search(self.grid, self.goal,self.start)
 
     def vec2int(self, v):
         return (int(v.x), int(v.y))
@@ -197,6 +198,10 @@ class Person(pg.sprite.Sprite):
         self.walking = True
 
     def drawPath(self):
+        for node in self.path:
+            x, y = node
+            rect = pg.Rect(x * TILESIZE, y * TILESIZE, TILESIZE, TILESIZE).move(self.game.camera.camera.topleft)
+            pg.draw.rect(self.game.screen, LIGHTGREY, rect)
         current = self.start + self.path[self.vec2int(self.start)]
         while current != self.goal:
             x = current.x * TILESIZE + TILESIZE / 2
@@ -208,13 +213,18 @@ class Person(pg.sprite.Sprite):
             # find next in path
             current = current + self.path[self.vec2int(current)]
 
-class WeightedGrid(SquareGrid):
-    def __init__(self, game):
-        super().__init__(game)
-        self.weights = {}
+class PriorityQueue:
+    def __init__(self):
+        self.nodes = []
 
-    def cost(self, from_node, to_node):
-        return self.weigths.get(to_node, 0) + 10
+    def put(self, node, cost):
+        heapq.heappush(self.nodes, (cost, node))
+
+    def get(self):
+        return heapq.heappop(self.nodes)[1]
+
+    def empty(self):
+        return len(self.nodes) == 0
 
 class SquareGrid:
     def __init__(self, game):
@@ -244,9 +254,8 @@ class SquareGrid:
     def vec2int(self, v):
         return (int(v.x), int(v.y))
 
-    def heuristic(node1, node2):
+    def heuristic(self, node1, node2):
         return (abs(node1.x - node2.y) + abs(node1.y - node2.y)) * 10
-
 
     def breadth_first_search(self, graph, start, end):
         frontier = deque()
@@ -262,6 +271,36 @@ class SquareGrid:
                     frontier.append(next)
                     path[self.vec2int(next)] = current - next
         return path
+
+    def dijkstra_search(self, graph, start, end):
+        frontier = PriorityQueue()
+        frontier.put(self.vec2int(start), 0)
+        path = {}
+        cost = {}
+        path[self.vec2int(start)] = None
+        cost[self.vec2int(start)] = 0
+
+        while not frontier.empty():
+            current = frontier.get()
+            if current == end:
+                break
+            for next in graph.find_neighbors(vec(current)):
+                next = self.vec2int(next)
+                next_cost = cost[current] + graph.cost(current, next)
+                if next not in cost or next_cost < cost[next]:
+                    cost[next] = next_cost
+                    priority = self.heuristic(end, vec(next))
+                    frontier.put(next, priority)
+                    path[next] = vec(current) - vec(next)
+        return path
+
+class WeightedGrid(SquareGrid):
+    def __init__(self, game):
+        super().__init__(game)
+        self.weights = {}
+
+    def cost(self, from_node, to_node):
+        return self.weights.get(to_node, 0) + 10
 
 class Priest(Person):
     pass
