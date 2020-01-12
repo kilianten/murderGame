@@ -182,9 +182,13 @@ class Person(pg.sprite.Sprite):
         self.dir = 0
         self.hitbox = Hitbox(self.rect)
         self.hitbox.setDimensions(-70,-80)
-        self.createGrid()
-        start = (3, 0)
-        self.path = self.grid.breath_first_search(start, self.grid)
+        self.start = vec(14, 0)
+        self.goal = vec(2, 2)
+        self.grid = SquareGrid(self.game)
+        self.path = self.grid.breadth_first_search(self.grid, self.goal,self.start)
+
+    def vec2int(self, v):
+        return (int(v.x), int(v.y))
 
     def update(self):
         self.y += 1
@@ -192,21 +196,27 @@ class Person(pg.sprite.Sprite):
         self.dir = 1
         self.walking = True
 
-    def createGrid(self):
-        self.grid = SquareGrid(self.game.map.width/64, self.game.map.height/64, self)
-        for wall in self.game.walls:
-            self.grid.walls.append(vec(wall.x, wall.y))
-
-class Priest(Person):
-    pass
+    def drawPath(self):
+        current = self.start + self.path[self.vec2int(self.start)]
+        while current != self.goal:
+            x = current.x * TILESIZE + TILESIZE / 2
+            y = current.y * TILESIZE + TILESIZE / 2
+            img = self.game.arrows[self.vec2int(self.path[(current.x, current.y)])]
+            r = img.get_rect(center=(x, y))
+            r = r.move(self.game.camera.camera.topleft)
+            self.game.screen.blit(img, r)
+            # find next in path
+            current = current + self.path[self.vec2int(current)]
 
 class SquareGrid:
-    def __init__(self, width, height, game):
-        self.width = width
-        self.height = height
-        self.walls = []
+    def __init__(self, game):
         self.game = game
-        self.connections = [vec(1,0), vec(-1, 0), vec(0,1), vec(0, -1)]
+        self.width = self.game.map.width/64
+        self.height = self.game.map.height/64
+        self.walls = []
+        for wall in self.game.walls:
+            self.walls.append(vec(wall.x, wall.y))
+        self.connections = [vec(1, 0), vec(-1, 0), vec(0, 1), vec(0, -1)]
 
     def in_bounds(self, node):
         return 0 <= node.x < self.width and 0 <= node.y < self.height
@@ -216,24 +226,30 @@ class SquareGrid:
 
     def find_neighbors(self, node):
         neighbors = [node + connection for connection in self.connections]
+        # don't use this for diagonals:
+        if (node.x + node.y) % 2:
+            neighbors.reverse()
         neighbors = filter(self.in_bounds, neighbors)
         neighbors = filter(self.passable, neighbors)
         return neighbors
 
     def vec2int(self, v):
-        return (int(v[0]), int(v[1]))
+        return (int(v.x), int(v.y))
 
-    def breath_first_search(self, start, graph):
+    def breadth_first_search(self, graph, start, end):
         frontier = deque()
         frontier.append(start)
         path = {}
         path[self.vec2int(start)] = None
-        visited = []
-        visited.append(self.vec2int(start))
         while len(frontier) > 0:
             current = frontier.popleft()
+            if current == end:
+                break
             for next in graph.find_neighbors(current):
                 if self.vec2int(next) not in path:
                     frontier.append(next)
                     path[self.vec2int(next)] = current - next
         return path
+
+class Priest(Person):
+    pass

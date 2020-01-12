@@ -142,15 +142,7 @@ class Game:
         pg.draw.rect(self.screen, RED, self.player.hitbox.rect.move(self.camera.camera.topleft), 1)
         self.drawGrid()
         for person in self.townspeople:
-            for node, dir in person.path.items():
-                if dir:
-                    x, y = node
-                    x = x * TILESIZE + TILESIZE/ 2
-                    y = y * TILESIZE + TILESIZE/ 2
-                    img = self.arrows[dir.x, dir.y]
-                    r = img.get_rect(center = (x, y))
-                    r = r.move(self.camera.camera.topleft)
-                    self.screen.blit(img, r)
+            person.drawPath()
 
     def updateClock(self):
         now = pg.time.get_ticks()

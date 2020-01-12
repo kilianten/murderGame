@@ -31,8 +31,6 @@ class Camera:
         y = max(-(self.height - HEIGHT), y)
         self.camera = pg.Rect(x, y, self.width, self.height)
         self.rect = self.camera
-        print(self.rect.x)
-        print(self.rect.y)
 
 class CameraView:
     def __init__(self):
