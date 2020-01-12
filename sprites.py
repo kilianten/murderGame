@@ -208,6 +208,14 @@ class Person(pg.sprite.Sprite):
             # find next in path
             current = current + self.path[self.vec2int(current)]
 
+class WeightedGrid(SquareGrid):
+    def __init__(self, game):
+        super().__init__(game)
+        self.weights = {}
+
+    def cost(self, from_node, to_node):
+        return self.weigths.get(to_node, 0) + 10
+
 class SquareGrid:
     def __init__(self, game):
         self.game = game
@@ -235,6 +243,10 @@ class SquareGrid:
 
     def vec2int(self, v):
         return (int(v.x), int(v.y))
+
+    def heuristic(node1, node2):
+        return (abs(node1.x - node2.y) + abs(node1.y - node2.y)) * 10
+
 
     def breadth_first_search(self, graph, start, end):
         frontier = deque()
