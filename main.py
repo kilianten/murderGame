@@ -8,6 +8,7 @@ from os import path
 from settings import *
 from sprites import *
 from map import *
+from townsPeople import *
 
 class Game:
 
@@ -135,13 +136,14 @@ class Game:
             pg.draw.line(self.screen, LIGHTGREY, (0, y), (WIDTH, y))
 
     def spawnTownspeople(self):
-        Priest(self, 600, 400, self.priest_img)
+        self.priest = Priest(self, 64, 64, self.priest_img)
 
     def debug(self):
-        pg.draw.rect(self.screen, RED, self.player.hitbox.rect.move(self.camera.camera.topleft), 1)
         self.drawGrid()
         for person in self.townspeople:
-            person.drawPath()
+            if person.isWalking:
+                person.drawPath()
+        pg.draw.rect(self.screen, RED, self.player.hitbox.rect.move(self.camera.camera.topleft), 1)
 
     def updateClock(self):
         now = pg.time.get_ticks()
