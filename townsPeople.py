@@ -10,8 +10,8 @@ class Person(pg.sprite.Sprite):
         self.groups = game.all_sprites, game.collidable_sprites, game.townspeople
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.x = x
-        self.y = y
+        self.x = x + TILESIZE
+        self.y = y + TILESIZE
         self.image = image
         self.rect = self.image.get_rect()
         self.rect.x = x
@@ -29,34 +29,44 @@ class Person(pg.sprite.Sprite):
         return (int(v.x), int(v.y))
 
     def update(self):
-        self.pos = vec(int(self.x/64), int(self.y/64))
-        print(self.x / 64)
-        print(self.y / 64)
-        self.rect.y = self.y
-        print(self.pos)
+        self.rect.center = (self.x + TILESIZE/2, self.y)
+        self.pos = vec(int(self.x/TILESIZE), int(self.y/TILESIZE))
+        if self.isWalking:
+            self.journey.update()
 
-    def startJourney(self, start, goal):
-        self.start = start
-        self.goal = goal
-        self.grid = WeightedGrid(self.game)
-        self.path = self.grid.a_star_search(self.grid, start, goal)
+    def startJourney(self, start, destination, game):
+        self.journey = Journey(start, destination, game)
         self.isWalking = True
 
     def drawPath(self):
-        for node in self.path:
+        for node in self.journey.path:
             x, y = node
             rect = pg.Rect(x * TILESIZE, y * TILESIZE, TILESIZE, TILESIZE).move(self.game.camera.camera.topleft)
             pg.draw.rect(self.game.screen, LIGHTGREY, rect)
-        current = self.start + self.path[self.vec2int(self.start)]
-        while current != self.goal:
+        current = self.journey.start + self.journey.path[self.vec2int(self.journey.start)]
+        while current != self.journey.destination:
             x = current.x * TILESIZE + TILESIZE / 2
             y = current.y * TILESIZE + TILESIZE / 2
-            img = self.game.arrows[self.vec2int(self.path[(current.x, current.y)])]
+            img = self.game.arrows[self.vec2int(self.journey.path[(current.x, current.y)])]
             r = img.get_rect(center=(x, y))
             r = r.move(self.game.camera.camera.topleft)
             self.game.screen.blit(img, r)
             # find next in path
-            current = current + self.path[self.vec2int(current)]
+            current = current + self.journey.path[self.vec2int(current)]
+
+class Journey:
+    def __init__(self, start, destination, game):
+        self.currentPos = start
+        self.stepNumber = 0
+        self.start = start
+        self.destination = destination
+        self.grid = WeightedGrid(game)
+        self.path = self.grid.a_star_search(self.grid, start, destination)
+
+    def update(self):
+        if self.currentPos != self.destination:
+            if self.currentPos != self.path:
+                print(self.path)
 
 class Priest(Person):
     pass
