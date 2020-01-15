@@ -10,8 +10,8 @@ class Person(pg.sprite.Sprite):
         self.groups = game.all_sprites, game.collidable_sprites, game.townspeople
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.x = x + TILESIZE
-        self.y = y + TILESIZE
+        self.x = x
+        self.y = y
         self.image = image
         self.rect = self.image.get_rect()
         self.rect.x = x
@@ -43,16 +43,16 @@ class Person(pg.sprite.Sprite):
             x, y = node
             rect = pg.Rect(x * TILESIZE, y * TILESIZE, TILESIZE, TILESIZE).move(self.game.camera.camera.topleft)
             pg.draw.rect(self.game.screen, LIGHTGREY, rect)
-        current = self.journey.start + self.journey.path[self.vec2int(self.journey.start)]
+        current = self.journey.start + self.journey.path[vec2int(self.journey.start)]
         while current != self.journey.destination:
             x = current.x * TILESIZE + TILESIZE / 2
             y = current.y * TILESIZE + TILESIZE / 2
-            img = self.game.arrows[self.vec2int(self.journey.path[(current.x, current.y)])]
+            img = self.game.arrows[vec2int(self.journey.path[(current.x, current.y)])]
             r = img.get_rect(center=(x, y))
             r = r.move(self.game.camera.camera.topleft)
             self.game.screen.blit(img, r)
             # find next in path
-            current = current + self.journey.path[self.vec2int(current)]
+            current = current + self.journey.path[vec2int(current)]
 
 class Journey:
     def __init__(self, start, destination, game):
@@ -66,7 +66,7 @@ class Journey:
     def update(self):
         if self.currentPos != self.destination:
             if self.currentPos != self.path:
-                print(self.path)
+                print(self.path[vec2int(self.currentPos)])
 
 class Priest(Person):
     pass
@@ -119,31 +119,31 @@ class SquareGrid:
         frontier = deque()
         frontier.append(start)
         path = {}
-        path[self.vec2int(start)] = None
+        path[vec2int(start)] = None
         while len(frontier) > 0:
             current = frontier.popleft()
             if current == end:
                 break
             for next in graph.find_neighbors(current):
-                if self.vec2int(next) not in path:
+                if vec2int(next) not in path:
                     frontier.append(next)
-                    path[self.vec2int(next)] = current - next
+                    path[vec2int(next)] = current - next
         return path
 
     def dijkstra_search(self, graph, start, end):
         frontier = PriorityQueue()
-        frontier.put(self.vec2int(start), 0)
+        frontier.put(vec2int(start), 0)
         path = {}
         cost = {}
-        path[self.vec2int(start)] = None
-        cost[self.vec2int(start)] = 0
+        path[vec2int(start)] = None
+        cost[vec2int(start)] = 0
 
         while not frontier.empty():
             current = frontier.get()
             if current == end:
                 break
             for next in graph.find_neighbors(vec(current)):
-                next = self.vec2int(next)
+                next = vec2int(next)
                 next_cost = cost[current] + graph.cost(current, next)
                 if next not in cost or next_cost < cost[next]:
                     cost[next] = next_cost
@@ -154,18 +154,18 @@ class SquareGrid:
 
     def a_star_search(self, graph, end, start):
         frontier = PriorityQueue()
-        frontier.put(self.vec2int(start), 0)
+        frontier.put(vec2int(start), 0)
         path = {}
         cost = {}
-        path[self.vec2int(start)] = None
-        cost[self.vec2int(start)] = 0
+        path[vec2int(start)] = None
+        cost[vec2int(start)] = 0
 
         while not frontier.empty():
             current = frontier.get()
             if current == end:
                 break
             for next in graph.find_neighbors(vec(current)):
-                next = self.vec2int(next)
+                next = vec2int(next)
                 next_cost = cost[current] + graph.cost(current, next)
                 if next not in cost or next_cost < cost[next]:
                     cost[next] = next_cost
@@ -181,3 +181,6 @@ class WeightedGrid(SquareGrid):
 
     def cost(self, from_node, to_node):
         return self.weights.get(to_node, 0) + 10
+
+def vec2int(v):
+    return (int(v.x), int(v.y))
