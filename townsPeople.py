@@ -24,15 +24,15 @@ class Person(pg.sprite.Sprite):
         self.grid = None
         self.path = None
         self.isWalking = False
+        self.rect.center = (self.x + TILESIZE/2, self.y)
+        self.pos = vec(int(self.x/TILESIZE), int(self.y/TILESIZE))
 
     def vec2int(self, v):
         return (int(v.x), int(v.y))
 
     def update(self):
-        self.rect.center = (self.x + TILESIZE/2, self.y)
-        self.pos = vec(int(self.x/TILESIZE), int(self.y/TILESIZE))
         if self.isWalking:
-            self.journey.update()
+            self.moveCharacter(self.journey.update())
 
     def startJourney(self, start, destination, game):
         self.journey = Journey(start, destination, game)
@@ -54,6 +54,13 @@ class Person(pg.sprite.Sprite):
             # find next in path
             current = current + self.journey.path[vec2int(current)]
 
+    def moveCharacter(self, vector):
+        self.pos = vec( vector + self.pos)
+        self.x = self.pos.x * TILESIZE
+        self.y = self.pos.y * TILESIZE
+        self.rect.center = (self.x + TILESIZE/2, self.y)
+
+
 class Journey:
     def __init__(self, start, destination, game):
         self.currentPos = start
@@ -62,11 +69,15 @@ class Journey:
         self.destination = destination
         self.grid = WeightedGrid(game)
         self.path = self.grid.a_star_search(self.grid, start, destination)
+        self.nextStep = self.path[vec2int(self.currentPos)] + self.currentPos
 
     def update(self):
         if self.currentPos != self.destination:
-            if self.currentPos != self.path:
-                print(self.path[vec2int(self.currentPos)])
+            if self.currentPos != self.nextStep:
+                #print(self.path[vec2int(self.currentPos)])
+                print(self.nextStep)
+                return vec(self.path[vec2int(self.currentPos)])
+
 
 class Priest(Person):
     pass

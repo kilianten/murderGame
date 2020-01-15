@@ -46,7 +46,7 @@ class Player(pg.sprite.Sprite):
             self.walking = True
             self.hitbox.setWidth(40)
         if keys[pg.K_i]:
-            self.game.priest.startJourney(vec(self.game.priest.pos), vec(10, 20), self.game)
+            self.game.priest.startJourney(vec(self.game.priest.pos), vec(20, 2), self.game)
         if keys[pg.K_SLASH]:
             self.isDebugModePressed = True
         if self.isDebugModePressed == True and not keys[pg.K_SLASH]: #check if key released

@@ -136,7 +136,7 @@ class Game:
             pg.draw.line(self.screen, LIGHTGREY, (0, y), (WIDTH, y))
 
     def spawnTownspeople(self):
-        self.priest = Priest(self, 0, 0, self.priest_img)
+        self.priest = Priest(self, 64, 64, self.priest_img)
 
     def debug(self):
         self.drawGrid()
