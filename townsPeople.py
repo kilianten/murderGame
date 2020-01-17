@@ -70,12 +70,12 @@ class Journey:
         self.grid = WeightedGrid(game)
         self.path = self.grid.a_star_search(self.grid, start, destination)
         self.nextStep = self.path[vec2int(self.currentPos)] + self.currentPos
+        print("Journey")
 
     def update(self):
-        if self.currentPos != self.destination:
-            if self.currentPos != self.nextStep:
+        if not self.currentPos == self.destination:
+            if not self.path[vec2int(self.currentPos)] == None:
                 #print(self.path[vec2int(self.currentPos)])
-                print(self.nextStep)
                 return vec(self.path[vec2int(self.currentPos)])
 
 
