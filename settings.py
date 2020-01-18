@@ -61,3 +61,7 @@ DEFAULT_MAP = "map1.png"
 #mapColours GUIDE
 #77A856:grass01
 #773228:brickwall
+
+
+#townsPeople
+PRIEST_SPEED = 10

@@ -54,7 +54,7 @@ class Player(pg.sprite.Sprite):
         if keys[pg.K_i]:
             self.isIPressed = True
         if self.isIPressed == True and not keys[pg.K_i]: #check if key released
-            self.game.priest.startJourney(vec(self.game.priest.pos), vec(2, 5), self.game)
+            self.game.priest.startJourney(vec(self.game.priest.pos), vec(3, 15), self.game)
             self.isIPressed = False
 
         if self.vx != 0 and self.vy != 0:
@@ -81,9 +81,6 @@ class Player(pg.sprite.Sprite):
         self.animate()
         self.get_keys()
         self.rect.x
-
-        print(self.isIPressed)
-
         checkHitbox = Hitbox(self.hitbox.rect)
         checkHitbox.rect.x += self.vx * self.game.dt
         if(not self.collide_with_walls('x', checkHitbox)):
