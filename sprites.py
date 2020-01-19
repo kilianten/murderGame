@@ -54,8 +54,9 @@ class Player(pg.sprite.Sprite):
         if keys[pg.K_i]:
             self.isIPressed = True
         if self.isIPressed == True and not keys[pg.K_i]: #check if key released
-            self.game.priest.startJourney(vec(self.game.priest.pos), vec(3, 15), self.game)
+            self.game.priest.startJourney(vec(self.game.priest.pos), vec(3, 40), self.game)
             self.isIPressed = False
+            print("released")
 
         if self.vx != 0 and self.vy != 0:
             #stop diagnal movement from being faster

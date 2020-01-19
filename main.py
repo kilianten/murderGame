@@ -65,7 +65,7 @@ class Game:
         self.brickwall_image = self.loadImage(img_folder, BRICKWALL, 32, 32)
         self.brickwall_corner_image = self.loadImage(img_folder, BRICKWALL_CORNER)
         self.grass01 = self.loadImage(img_folder, GRASS01)
-        self.priest_img = self.loadImage(img_folder, PRIEST_IMAGE)
+        self.priest_img = self.loadImage(img_folder,PRIEST_IMAGE)
         self.loadIcons(img_folder)
 
     def load_data(self):
@@ -143,6 +143,7 @@ class Game:
         for person in self.townspeople:
             if person.isWalking:
                 person.drawPath()
+            pg.draw.rect(self.screen, RED, person.rect.move(self.camera.camera.topleft), 1)
         pg.draw.rect(self.screen, RED, self.player.hitbox.rect.move(self.camera.camera.topleft), 1)
 
     def updateClock(self):
