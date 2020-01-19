@@ -17,33 +17,34 @@ class Player(pg.sprite.Sprite):
         self.walking = False
         self.current_frame = 0
         self.last_update = 0
-        self.dir = 0
+        self.dir = (0, 1)
         self.hitbox = Hitbox(self.rect)
         self.hitbox.setDimensions(-70,-80)
         self.isDebugModePressed = False
         self.isIPressed = False
+        self.visionRect = None
 
     def get_keys(self):
         self.vx, self.vy = 0, 0
         keys = pg.key.get_pressed()
         if keys[pg.K_a]:
-            self.dir = 3
+            self.dir = vec(-1, 0)
             self.walking = True
             self.vx = -PLAYER_SPEED
             self.hitbox.setWidth(25)
         if keys[pg.K_d]:
             self.vx = PLAYER_SPEED
-            self.dir = 1
+            self.dir = vec(1, 0)
             self.walking = True
             self.hitbox.setWidth(25)
         if keys[pg.K_w]:
-            self.dir = 0
+            self.dir = vec(0, -1)
             self.hitbox.setWidth(40)
             self.vy = -PLAYER_SPEED
             self.walking = True
         if keys[pg.K_s]:
             self.vy = PLAYER_SPEED
-            self.dir = 2
+            self.dir = vec(0, 1)
             self.walking = True
             self.hitbox.setWidth(40)
         if keys[pg.K_SLASH]:
@@ -54,9 +55,13 @@ class Player(pg.sprite.Sprite):
         if keys[pg.K_i]:
             self.isIPressed = True
         if self.isIPressed == True and not keys[pg.K_i]: #check if key released
-            self.game.priest.startJourney(vec(self.game.priest.pos), vec(1444, 1444), self.game)
+            self.game.priest.startJourney(vec(self.game.priest.pos), vec(5, 5), self.game)
             self.isIPressed = False
-            print("released")
+        if keys[pg.K_e]:
+            self.visionRect = pg.Rect((vec((self.pos) * TILESIZE) + (vec(self.dir) * 64)), (TILESIZE * 2, TILESIZE * 2))
+            for person in self.game.townspeople:
+                if self.visionRect.colliderect(person.rect):
+                    person.createSpeechBubble()
 
         if self.vx != 0 and self.vy != 0:
             #stop diagnal movement from being faster
@@ -94,6 +99,9 @@ class Player(pg.sprite.Sprite):
             self.rect.y = self.y
 
         self.hitbox.setPosition(self.rect.center, 0, PLAYER_HITBOX_OFFSET)
+        self.pos = vec(int(self.hitbox.rect.center[0] / TILESIZE), int(self.hitbox.rect.center[1] / TILESIZE))
+        self.pos = vec(self.pos)
+
 
     def animate(self):
         now = pg.time.get_ticks()
@@ -105,27 +113,27 @@ class Player(pg.sprite.Sprite):
             self.image = self.getStandingSprite()
 
     def getWalkingAnimation(self):
-        if self.dir == 2:
+        if self.dir == vec(0, 1):
             self.current_frame = (self.current_frame + 1) % len(self.game.player_walking_down)
             return self.game.player_walking_down[self.current_frame]
-        if self.dir == 0:
+        if self.dir == vec(0, -1):
             self.current_frame = (self.current_frame + 1) % len(self.game.player_walking_foward)
             return self.game.player_walking_foward[self.current_frame]
-        if self.dir == 1:
+        if self.dir == vec(1, 0):
             self.current_frame = (self.current_frame + 1) % len(self.game.player_walking_right)
             return self.game.player_walking_right[self.current_frame]
-        if self.dir == 3:
+        if self.dir == vec(-1, 0):
             self.current_frame = (self.current_frame + 1) % len(self.game.player_walking_left)
             return self.game.player_walking_left[self.current_frame]
 
     def getStandingSprite(self):
-        if self.dir == 2:
+        if self.dir == vec(0, 1):
             return self.game.player_img
-        if self.dir == 0:
+        if self.dir == vec(0, -1):
             return self.game.player_img_foward
-        if self.dir == 1:
+        if self.dir == vec(1, 0):
             return self.game.player_img_right
-        if self.dir == 3:
+        if self.dir == vec(-1, 0):
             return self.game.player_img_left
 
 class Wall(pg.sprite.Sprite):

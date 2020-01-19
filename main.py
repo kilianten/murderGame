@@ -66,6 +66,7 @@ class Game:
         self.brickwall_corner_image = self.loadImage(img_folder, BRICKWALL_CORNER)
         self.grass01 = self.loadImage(img_folder, GRASS01)
         self.priest_img = self.loadImage(img_folder,PRIEST_IMAGE)
+        self.speech_bubble_image = self.loadImage(img_folder,SPEECH_BUBBLE_IMAGE)
         self.loadIcons(img_folder)
 
     def load_data(self):
@@ -144,6 +145,9 @@ class Game:
             if person.isWalking:
                 person.drawPath()
             pg.draw.rect(self.screen, RED, person.rect.move(self.camera.camera.topleft), 1)
+        pg.draw.rect(self.screen, RED, self.player.hitbox.rect.move(self.camera.camera.topleft), 1)
+        if self.player.visionRect != None:
+            pg.draw.rect(self.screen, GREEN, self.player.visionRect.move(self.camera.camera.topleft), 1)
         pg.draw.rect(self.screen, RED, self.player.hitbox.rect.move(self.camera.camera.topleft), 1)
 
     def updateClock(self):

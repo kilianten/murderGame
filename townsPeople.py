@@ -10,21 +10,19 @@ class Person(pg.sprite.Sprite):
         self.groups = game.all_sprites, game.collidable_sprites, game.townspeople
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
+        self.walking = False
+        self.current_frame = 0
+        self.last_update = 0
+        self.grid = None
+        self.path = None
+        self.isWalking = False
         self.x = x
         self.y = y
         self.image = image
         self.rect = self.image.get_rect()
         self.rect.x = x
-        self.walking = False
-        self.current_frame = 0
-        self.last_update = 0
-        self.dir = 0
+        self.dir = (1, 0)
         self.hitbox = Hitbox(self.rect)
-        self.hitbox.setDimensions(-70, -80)
-        self.grid = None
-        self.path = None
-        self.isWalking = False
-        self.rect.center = (self.x, self.y)
         self.pos = vec(int(self.x/TILESIZE), int(self.y/TILESIZE))
 
     def vec2int(self, v):
@@ -64,7 +62,6 @@ class Person(pg.sprite.Sprite):
         self.rect.x = self.x - (TILESIZE / 2)
         self.rect.y = self.y - TILESIZE
 
-
 class Journey:
     def __init__(self, start, destination, game):
         self.start = start
@@ -73,26 +70,25 @@ class Journey:
         self.path = self.grid.a_star_search(self.grid, start, destination)
         self.nextStep = self.path[vec2int(self.start)] + self.start
         self.currentNode = self.path[vec2int(start)]
-        print("journey created")
 
     def update(self, currentPos):
-        print("Position")
-        print(currentPos)
-        print("NEXT")
-        print(self.nextStep)
-        print("CurrentNode")
-        print(self.currentNode)
         if currentPos != self.destination:
             if currentPos == self.nextStep:
                 self.currentNode = self.path[vec2int(self.nextStep)]
                 self.nextStep = self.nextStep + self.path[vec2int(self.nextStep)]
             # find next in path
-            return self.currentNode / 10
+            return self.currentNode / PRIEST_SPEED
         else:
             return False
 
 class Priest(Person):
-    pass
+    def __init__(self, game, x, y, image):
+        super().__init__(game, x, y, image)
+        self.hitbox.setDimensions(-70, -80)
+        self.rect.center = (self.x, self.y)
+
+    def createSpeechBubble(self):
+        self.SpeechBubble =  SpeechBubble(100, 100, self.game)
 
 class PriorityQueue:
     def __init__(self):
@@ -207,3 +203,15 @@ class WeightedGrid(SquareGrid):
 
 def vec2int(v):
     return (int(v.x), int(v.y))
+
+class SpeechBubble(pg.sprite.Sprite):
+    def __init__(self, x, y, game):
+        self.groups = game.all_sprites
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.image = game.speech_bubble_image
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.x =  x
+        self.rect.y =  y
+        print("created")
