@@ -56,7 +56,7 @@ ARROW_RIGHT = "arrowRight.png"
 ICON_SIZE = 5
 
 #MAPFILES
-DEFAULT_MAP = "map1.png"
+DEFAULT_MAP = "map2.png"
 
 #mapColours GUIDE
 #77A856:grass01
