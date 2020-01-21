@@ -79,6 +79,7 @@ class Journey:
             # find next in path
             return self.currentNode / PRIEST_SPEED
         else:
+            self.walking = False
             return False
 
 class Priest(Person):
@@ -88,7 +89,7 @@ class Priest(Person):
         self.rect.center = (self.x, self.y)
 
     def createSpeechBubble(self):
-        self.SpeechBubble =  SpeechBubble(100, 100, self.game)
+        self.SpeechBubble =  SpeechBubble(self.x + TILESIZE, self.y - (TILESIZE * 2), self.game)
 
 class PriorityQueue:
     def __init__(self):
@@ -212,6 +213,5 @@ class SpeechBubble(pg.sprite.Sprite):
         self.x = x
         self.y = y
         self.rect = self.image.get_rect()
-        self.rect.x =  x
-        self.rect.y =  y
-        print("created")
+        self.rect.x =  self.x
+        self.rect.y =  self.y
