@@ -9,6 +9,7 @@ from settings import *
 from sprites import *
 from map import *
 from townsPeople import *
+from priest import *
 
 class Game:
 

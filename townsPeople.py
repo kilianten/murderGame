@@ -62,6 +62,9 @@ class Person(pg.sprite.Sprite):
         self.rect.x = self.x - (TILESIZE / 2)
         self.rect.y = self.y - TILESIZE
 
+    def createSpeechBubble(self):
+        self.SpeechBubble =  SpeechBubble(self.x + TILESIZE, self.y - (TILESIZE * 2), self.game)
+
 class Journey:
     def __init__(self, start, destination, game):
         self.start = start
@@ -81,15 +84,6 @@ class Journey:
         else:
             self.walking = False
             return False
-
-class Priest(Person):
-    def __init__(self, game, x, y, image):
-        super().__init__(game, x, y, image)
-        self.hitbox.setDimensions(-70, -80)
-        self.rect.center = (self.x, self.y)
-
-    def createSpeechBubble(self):
-        self.SpeechBubble =  SpeechBubble(self.x + TILESIZE, self.y - (TILESIZE * 2), self.game)
 
 class PriorityQueue:
     def __init__(self):
