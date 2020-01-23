@@ -23,6 +23,7 @@ class Player(pg.sprite.Sprite):
         self.isDebugModePressed = False
         self.isIPressed = False
         self.visionRect = None
+        self.isTalking = False
 
     def get_keys(self):
         self.vx, self.vy = 0, 0
@@ -60,7 +61,10 @@ class Player(pg.sprite.Sprite):
         if keys[pg.K_e]:
             self.visionRect = pg.Rect((vec((self.pos) * TILESIZE) + (vec(self.dir) * 64)), (TILESIZE * 2, TILESIZE * 2))
             for person in self.game.townspeople:
-                if self.visionRect.colliderect(person.rect):
+                if self.visionRect.colliderect(person.rect) and person.isNotInRush:
+                    person.isTalking = True
+                    person.isWalking = False
+                    self.isTalking = True
                     person.createSpeechBubble()
 
         if self.vx != 0 and self.vy != 0:

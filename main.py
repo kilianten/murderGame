@@ -10,6 +10,7 @@ from sprites import *
 from map import *
 from townsPeople import *
 from priest import *
+from interface import *
 
 class Game:
 
@@ -68,6 +69,7 @@ class Game:
         self.grass01 = self.loadImage(img_folder, GRASS01)
         self.priest_img = self.loadImage(img_folder,PRIEST_IMAGE)
         self.speech_bubble_image = self.loadImage(img_folder,SPEECH_BUBBLE_IMAGE)
+        self.conversation_hud_image = self.loadImage(img_folder, CONVERSATION_HUD, 0, 0)
         self.loadIcons(img_folder)
 
     def load_data(self):
@@ -128,6 +130,8 @@ class Game:
         if self.HUDenabled == True:
             self.drawClock()
             self.drawDay()
+        if self.player.isTalking:
+            self.screen.blit(self.conversation_hud_image, (0, (HEIGHT - self.conversation_hud_image.get_height())))
         pg.display.flip()
 
     def drawGrid(self):
@@ -157,7 +161,7 @@ class Game:
             self.last_update = now
 
             if self.gameTime[0] == 23 and self.gameTime[1] == 59:
-                increaseDay()
+                self.increaseDay()
 
             if self.gameTime[1] == 59:
                 self.gameTime[0] += 1 #add an hour
@@ -235,6 +239,7 @@ class Game:
         for i in range(0, len(array)):
             temp.append(self.loadImage(img_folder, array[i], xScale, yScale))
         return temp
+
 
 
 

@@ -55,6 +55,7 @@ PRIEST_IMAGE = "priest.png"
 ICON_HOME = "home.png"
 ARROW_RIGHT = "arrowRight.png"
 ICON_SIZE = 5
+CONVERSATION_HUD = "conversationMenu.png"
 
 #MAPFILES
 DEFAULT_MAP = "map1.png"
@@ -66,3 +67,10 @@ DEFAULT_MAP = "map1.png"
 
 #townsPeople
 PRIEST_SPEED = 20
+
+#conversations
+NUM_OF_OPTIONS = 3
+SPEECH_TREE = {"Chat": ["How are you?", "Whats up"], "Argue": ["I hate you"], "Insult":["You suck"], "Compliment":["You look good"]}
+MAIN_MENU = []
+for key in SPEECH_TREE:
+   MAIN_MENU.append(key)

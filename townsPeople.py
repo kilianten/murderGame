@@ -10,7 +10,6 @@ class Person(pg.sprite.Sprite):
         self.groups = game.all_sprites, game.collidable_sprites, game.townspeople
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.walking = False
         self.current_frame = 0
         self.last_update = 0
         self.grid = None
@@ -24,6 +23,7 @@ class Person(pg.sprite.Sprite):
         self.dir = (1, 0)
         self.hitbox = Hitbox(self.rect)
         self.pos = vec(int(self.x/TILESIZE), int(self.y/TILESIZE))
+        self.isNotInRush = True
 
     def vec2int(self, v):
         return (int(v.x), int(v.y))
@@ -82,7 +82,7 @@ class Journey:
             # find next in path
             return self.currentNode / PRIEST_SPEED
         else:
-            self.walking = False
+            self.isWalking = False
             return False
 
 class PriorityQueue:
