@@ -65,6 +65,7 @@ class Player(pg.sprite.Sprite):
                     person.isTalking = True
                     person.isWalking = False
                     self.isTalking = True
+                    self.game.isInChatMode = True
                     person.createSpeechBubble()
 
         if self.vx != 0 and self.vy != 0:

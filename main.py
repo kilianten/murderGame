@@ -33,6 +33,7 @@ class Game:
         self.currentDay = 0
         self.daysRunning = 0
         self.isDebugMode = False
+        self.isInChatMode = False
 
     def load_settings(self):
         print("Loading Settings")
@@ -117,9 +118,10 @@ class Game:
 
     def update(self):
         # update portion of the game loop
-        self.all_sprites.update()
-        self.camera.update(self.player)
-        self.updateClock()
+        if self.isInChatMode == False:
+            self.all_sprites.update()
+            self.camera.update(self.player)
+            self.updateClock()
 
     def draw(self):
         self.screen.fill(BGCOLOR)
