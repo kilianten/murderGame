@@ -6,14 +6,16 @@ vec = pg.math.Vector2
 
 class Player(pg.sprite.Sprite):
     def __init__(self, game, x, y):
-        self.groups = game.all_sprites, game.collidable_sprites
+        self.groups = game.all_sprites
         pg.sprite.Sprite.__init__(self, self.groups)
-        self.game = game
-        self.x = x + TILESIZE
-        self.y = y + TILESIZE
         self.vx, self.vx = 0, 0
+        self.game = game
+        self.x = x * TILESIZE
+        self.y = y * TILESIZE
         self.image = game.player_img
         self.rect = self.image.get_rect()
+        self.rect.x = 0
+        self.rect.y = 0
         self.walking = False
         self.current_frame = 0
         self.last_update = 0
@@ -76,22 +78,17 @@ class Player(pg.sprite.Sprite):
             self.walking = False
 
     def collide_with_walls(self, dir, hitbox):
-        for wall in self.game.walls:
-            if dir == 'x':
-                hits = pg.sprite.spritecollide(hitbox, self.game.walls, False)
-                if hits:
-                    return True
-
-            if dir == 'y':
-                hits = pg.sprite.spritecollide(self.hitbox, self.game.walls, False)
-                if hits:
-                    return True
+        hits = pg.sprite.spritecollide(hitbox, self.game.walls, False)
+        if hits:
+            return True
+        for object in self.game.collidable_sprites:
+            if(hitbox.rect.colliderect(object.hitbox)):
+                return True
         return False
 
     def update(self):
         self.animate()
         self.get_keys()
-        self.rect.x
         checkHitbox = Hitbox(self.hitbox.rect)
         checkHitbox.rect.x += self.vx * self.game.dt
         if(not self.collide_with_walls('x', checkHitbox)):
@@ -142,7 +139,7 @@ class Player(pg.sprite.Sprite):
             return self.game.player_img_left
 
 class Wall(pg.sprite.Sprite):
-    def __init__(self, game, x, y, direction):
+    def __init__(self, game, x, y):
         self.groups = game.all_sprites, game.walls
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
@@ -150,12 +147,23 @@ class Wall(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.x = x
         self.y = y
-        if(direction == "corner"):
-            self.rect.x = x * TILESIZE
-            self.rect.y = y * TILESIZE
-        if(direction == "horizontal"):
-            self.rect.x = x * TILESIZE
-            self.rect.y = y * TILESIZE
+        self.rect.x = x * TILESIZE
+        self.rect.y = y * TILESIZE
+
+class Alter(pg.sprite.Sprite):
+    def __init__(self, game, x, y):
+        self.groups = game.all_sprites, game.collidable_sprites
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        self.image = game.alter_image
+        self.rect = self.image.get_rect()
+        self.x = x * 64
+        self.y = y * 64
+        self.rect.center = ((x * TILESIZE) - 32, y * TILESIZE + 32)
+        self.rect.height
+        self.hitbox = Hitbox(self.rect)
+        self.hitbox.setDimensions(-70,-80)
+
 
 class AcousticGuitar(pg.sprite.Sprite):
     def __init__(self, game, x, y):

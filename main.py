@@ -71,6 +71,7 @@ class Game:
         self.priest_img = self.loadImage(img_folder,PRIEST_IMAGE)
         self.speech_bubble_image = self.loadImage(img_folder,SPEECH_BUBBLE_IMAGE)
         self.conversation_hud_image = self.loadImage(img_folder, CONVERSATION_HUD, 0, 0)
+        self.alter_image = self.loadImage(img_folder, ALTER_IMAGE, 48, 48)
         self.loadIcons(img_folder)
 
     def load_data(self):
@@ -92,11 +93,11 @@ class Game:
             for y in range(map.tileheight):
                 colour = map.mapImage.get_at((x,y))
                 if colour == (119, 50, 40, 255):
-                    Wall(self, x, y, "horizontal")
-                if colour == '2':
-                    Wall(self, col, row, "corner")
+                    Wall(self, x, y)
                 if colour == (105, 106, 106, 255):
-                    self.player = Player(self, 300, 300)
+                    self.player = Player(self, x, y)
+                if colour == (	142, 68, 140, 255):
+                    self.alter = Alter(self, x, y)
 
     def run(self):
         # game loop - set self.playing = False to end the game
@@ -149,7 +150,8 @@ class Game:
     def debug(self):
         self.drawGrid()
         for person in self.townspeople:
-            if person.isWalking:
+            if person.isWalking
+            :
                 person.drawPath()
             pg.draw.rect(self.screen, RED, person.rect.move(self.camera.camera.topleft), 1)
         pg.draw.rect(self.screen, RED, self.player.hitbox.rect.move(self.camera.camera.topleft), 1)

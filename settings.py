@@ -41,6 +41,7 @@ DAYS_OF_WEEK = ["mon.png"]
 #items
 ACOUSTIC_GUITAR = "acousticGuitar.png"
 SPEECH_BUBBLE_IMAGE = "speechBubble.png"
+ALTER_IMAGE = "alter.png"
 
 #TILES
 BRICKWALL = "brickWall32.png"
@@ -63,7 +64,7 @@ DEFAULT_MAP = "map1.png"
 #mapColours GUIDE
 #77A856:grass01
 #773228:brickwall
-
+#8e448c:alter
 
 #townsPeople
 PRIEST_SPEED = 20
