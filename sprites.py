@@ -157,12 +157,12 @@ class Alter(pg.sprite.Sprite):
         self.game = game
         self.image = game.alter_image
         self.rect = self.image.get_rect()
-        self.x = x * 64
-        self.y = y * 64
-        self.rect.center = ((x * TILESIZE) - 32, y * TILESIZE + 32)
-        self.rect.height
+        self.x = x * TILESIZE
+        self.y = y * TILESIZE
+        self.rect.center = ((x * TILESIZE), y * TILESIZE)
         self.hitbox = Hitbox(self.rect)
-        self.hitbox.setDimensions(-70,-80)
+        self.hitbox.setDimensions(0,-50)
+        self.hitbox.rect.bottomleft = self.rect.bottomleft
 
 
 class AcousticGuitar(pg.sprite.Sprite):

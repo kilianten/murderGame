@@ -72,6 +72,8 @@ class Game:
         self.speech_bubble_image = self.loadImage(img_folder,SPEECH_BUBBLE_IMAGE)
         self.conversation_hud_image = self.loadImage(img_folder, CONVERSATION_HUD, 0, 0)
         self.alter_image = self.loadImage(img_folder, ALTER_IMAGE, 48, 48)
+        self.priestReadingAnimation = self.loadAnimation(img_folder, PRIEST_READING_ANIM)
+        print(self.priestReadingAnimation)
         self.loadIcons(img_folder)
 
     def load_data(self):
@@ -126,8 +128,6 @@ class Game:
 
     def draw(self):
         self.screen.fill(BGCOLOR)
-        if self.isDebugMode:
-            self.debug()
         for sprite in self.all_sprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
         if self.HUDenabled == True:
@@ -135,6 +135,8 @@ class Game:
             self.drawDay()
         if self.player.isTalking:
             self.screen.blit(self.conversation_hud_image, (0, (HEIGHT - self.conversation_hud_image.get_height())))
+        if self.isDebugMode:
+            self.debug()
         pg.display.flip()
 
     def drawGrid(self):
@@ -150,10 +152,11 @@ class Game:
     def debug(self):
         self.drawGrid()
         for person in self.townspeople:
-            if person.isWalking
-            :
+            if person.isWalking:
                 person.drawPath()
             pg.draw.rect(self.screen, RED, person.rect.move(self.camera.camera.topleft), 1)
+        for object in self.collidable_sprites:
+            pg.draw.rect(self.screen, ORANGE, object.hitbox.rect.move(self.camera.camera.topleft), 1)
         pg.draw.rect(self.screen, RED, self.player.hitbox.rect.move(self.camera.camera.topleft), 1)
         if self.player.visionRect != None:
             pg.draw.rect(self.screen, GREEN, self.player.visionRect.move(self.camera.camera.topleft), 1)
@@ -231,6 +234,14 @@ class Game:
         self.arrows = {}
         for dir in [(1, 0), (0, 1), (-1, 0), (0, -1)]:
             self.arrows[dir] = pg.transform.rotate(arrow, vec(dir).angle_to(vec(1,0)))
+
+    def loadAnimation(self, folder, imageCollection,  xscale=TILESIZE, yscale=TILESIZE):
+        animationImage = []
+        for imageName in imageCollection:
+            image = pg.image.load(path.join(folder, imageName)).convert_alpha()
+            animationImage.append(pg.transform.scale(image, (image.get_rect().width + xscale, image.get_rect().height + yscale)))
+        return animationImage
+
 
     def show_start_screen(self):
         pass

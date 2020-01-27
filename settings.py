@@ -6,6 +6,7 @@ LIGHTGREY = (100, 100, 100)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
+ORANGE = (255,127,80)
 
 # game settings
 SETTINGS = {"ISFULLSCREEN":"True"}
@@ -51,6 +52,7 @@ GRASS01 = "grass.png"
 #TOWNSPEOPLE
 #Priest
 PRIEST_IMAGE = "priest.png"
+PRIEST_READING_ANIM = ["priestReading1.png", "priestReading2.png", "priestReading3.png", "priestReading4.png", "priestReading5.png", "priestReading6.png", "priestReading7.png", "priestReading8.png", "priestReading9.png", "priestReading10.png", "priestReading11.png", "priestReading12.png", "priestReading13.png"]
 
 #HUD
 ICON_HOME = "home.png"
