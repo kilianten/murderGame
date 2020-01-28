@@ -53,7 +53,7 @@ GRASS01 = "grass.png"
 #Priest
 PRIEST_IMAGE = "priest.png"
 PRIEST_READING_ANIM = ["priestReading1.png", "priestReading2.png", "priestReading3.png", "priestReading4.png", "priestReading5.png", "priestReading6.png", "priestReading7.png", "priestReading8.png", "priestReading9.png", "priestReading10.png", "priestReading11.png", "priestReading12.png", "priestReading13.png"]
-
+WALKING_ANIMATION_UPDATE_TIME = 70
 #HUD
 ICON_HOME = "home.png"
 ARROW_RIGHT = "arrowRight.png"
