@@ -11,6 +11,7 @@ from map import *
 from townsPeople import *
 from priest import *
 from interface import *
+from time import  *
 
 class Game:
 
@@ -34,6 +35,7 @@ class Game:
         self.daysRunning = 0
         self.isDebugMode = False
         self.isInChatMode = False
+        self.gameMinutes = 0
 
     def load_settings(self):
         print("Loading Settings")
@@ -73,7 +75,6 @@ class Game:
         self.conversation_hud_image = self.loadImage(img_folder, CONVERSATION_HUD, 0, 0)
         self.alter_image = self.loadImage(img_folder, ALTER_IMAGE, 48, 48)
         self.priestReadingAnimation = self.loadAnimation(img_folder, PRIEST_READING_ANIM)
-        print(self.priestReadingAnimation)
         self.loadIcons(img_folder)
 
     def load_data(self):
@@ -173,12 +174,12 @@ class Game:
             if self.gameTime[1] == 59:
                 self.gameTime[0] += 1 #add an hour
             self.gameTime[1] = (self.gameTime[1] + 1) % 60
+            self.gameMinutes += 1
+            print(self.gameMinutes)
 
     def increaseDay(self):
         self.currentDay = (self.currentDay + 1) % 7  #increase day
         self.daysRunning += 1
-        self.gameTime[0] = 0
-        self.gameTime[1] = 0
 
     def drawClock(self):
         self.drawSeconds()

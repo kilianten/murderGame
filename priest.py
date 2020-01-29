@@ -10,6 +10,7 @@ class Priest(Person):
         self.current_frame = 0
 
     def update(self):
+        super().update()
         self.animate()
 
     def animate(self):

@@ -20,6 +20,13 @@ class DateTime:
            self.hour = hour
            self.date = date
 
+    def update():
+        if self.minute == 59 and self.hour == 23:
+            self.minute = 0
+            self.hour = 0
+        elif self.minute == 59:
+            self.hour += 1
+        self.minute = (self.minute + 1) % MINUTES_IN_HOUR
 
    def getMinutes(self):
        return self.minute + self.hour * MINUTES_IN_HOUR + (self.date * HOURS_IN_DAY * MINUTES_IN_HOUR)
