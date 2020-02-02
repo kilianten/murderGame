@@ -11,7 +11,7 @@ from map import *
 from townsPeople import *
 from priest import *
 from interface import *
-from time import  *
+from times import *
 
 class Game:
 
@@ -29,13 +29,15 @@ class Game:
         pg.key.set_repeat(500, 100)
         self.load_data()
         self.HUDenabled = True
-        self.gameTime = [0, 0]
         self.last_update = 0
         self.currentDay = 0
         self.daysRunning = 0
         self.isDebugMode = False
         self.isInChatMode = False
         self.gameMinutes = 0
+        self.gameTime = DateTime(0, 0, 1)
+        self.schdule = []
+        self.generateEvents()
 
     def load_settings(self):
         print("Loading Settings")
@@ -102,6 +104,9 @@ class Game:
                 if colour == (	142, 68, 140, 255):
                     self.alter = Alter(self, x, y)
 
+    def generateEvents(self):
+        pass
+
     def run(self):
         # game loop - set self.playing = False to end the game
         self.playing = True
@@ -167,18 +172,9 @@ class Game:
         now = pg.time.get_ticks()
         if now - self.last_update > CLOCK_UPDATE:
             self.last_update = now
-
-            if self.gameTime[0] == 23 and self.gameTime[1] == 59:
-                self.increaseDay()
-
-            if self.gameTime[1] == 59:
-                self.gameTime[0] += 1 #add an hour
-            self.gameTime[1] = (self.gameTime[1] + 1) % 60
-            self.gameMinutes += 1
-            print(self.gameMinutes)
+            self.gameTime.update()
 
     def increaseDay(self):
-        self.currentDay = (self.currentDay + 1) % 7  #increase day
         self.daysRunning += 1
 
     def drawClock(self):
@@ -187,14 +183,14 @@ class Game:
         self.drawHours()
 
     def drawSeconds(self):
-        secondCounter = self.gameTime[1] % 10
-        tenSecondCounter = int(self.gameTime[1] / 10)
+        secondCounter = self.gameTime.minute % 10
+        tenSecondCounter = int(self.gameTime.minute / 10)
         self.screen.blit(self.clock_number_images[tenSecondCounter], [180,20])
         self.screen.blit(self.clock_number_images[secondCounter], [200,20])
 
     def drawHours(self):
-        hourCounter = self.gameTime[0] % 10
-        tenHourCounter = int(self.gameTime[0] / 10)
+        hourCounter = self.gameTime.hour % 10
+        tenHourCounter = int(self.gameTime.hour / 10)
         self.screen.blit(self.clock_number_images[hourCounter], [150,20])
         self.screen.blit(self.clock_number_images[tenHourCounter], [130,20])
 

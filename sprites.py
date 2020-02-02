@@ -23,7 +23,6 @@ class Player(pg.sprite.Sprite):
         self.hitbox = Hitbox(self.rect)
         self.hitbox.setDimensions(-70,-80)
         self.isDebugModePressed = False
-        self.isIPressed = False
         self.visionRect = None
         self.isTalking = False
 
@@ -55,11 +54,6 @@ class Player(pg.sprite.Sprite):
         if self.isDebugModePressed == True and not keys[pg.K_SLASH]: #check if key released
             self.game.isDebugMode = not self.game.isDebugMode
             self.isDebugModePressed = False
-        if keys[pg.K_i]:
-            self.isIPressed = True
-        if self.isIPressed == True and not keys[pg.K_i]: #check if key released
-            self.game.priest.startJourney(vec(self.game.priest.pos), vec(5, 5), self.game)
-            self.isIPressed = False
         if keys[pg.K_e]:
             self.visionRect = pg.Rect((vec((self.pos) * TILESIZE) + (vec(self.dir) * 64)), (TILESIZE * 2, TILESIZE * 2))
             for person in self.game.townspeople:

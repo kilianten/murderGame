@@ -24,6 +24,7 @@ class Person(pg.sprite.Sprite):
         self.hitbox = Hitbox(self.rect)
         self.pos = vec(int(self.x/TILESIZE), int(self.y/TILESIZE))
         self.isNotInRush = True
+        self.isAlive = True
 
     def vec2int(self, v):
         return (int(v.x), int(v.y))
