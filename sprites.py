@@ -151,8 +151,8 @@ class Alter(pg.sprite.Sprite):
         self.game = game
         self.image = game.alter_image
         self.rect = self.image.get_rect()
-        self.x = x * TILESIZE
-        self.y = y * TILESIZE
+        self.x = x
+        self.y = y
         self.rect.center = ((x * TILESIZE), y * TILESIZE)
         self.hitbox = Hitbox(self.rect)
         self.hitbox.setDimensions(0,-50)

@@ -1,5 +1,7 @@
 import pygame as pg
 from settings import *
+vec = pg.math.Vector2
+
 
 MINUTES_IN_DAY = 1440
 MINUTES_IN_HOUR = 60

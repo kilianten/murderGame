@@ -36,7 +36,7 @@ class Game:
         self.isInChatMode = False
         self.gameMinutes = 0
         self.gameTime = DateTime(0, 0, 1)
-        self.schdule = []
+        self.schedule = []
         self.generateEvents()
 
     def load_settings(self):
@@ -69,7 +69,7 @@ class Game:
         self.clock_semicolon_image = self.loadImage(img_folder, CLOCK_SEMICOLON, -30, -30)
         self.days_of_week_images = self.loadArrayOfImages(DAYS_OF_WEEK, img_folder, -30, -16)
         self.acoustic_guitar = self.loadImage(img_folder, ACOUSTIC_GUITAR, 26, 52)
-        self.brickwall_image = self.loadImage(img_folder, BRICKWALL, 32, 32)
+        self.brickwall_image = self.loadImage(img_folder, BRICKWALL,  32, 32)
         self.brickwall_corner_image = self.loadImage(img_folder, BRICKWALL_CORNER)
         self.grass01 = self.loadImage(img_folder, GRASS01)
         self.priest_img = self.loadImage(img_folder,PRIEST_IMAGE)
@@ -105,7 +105,7 @@ class Game:
                     self.alter = Alter(self, x, y)
 
     def generateEvents(self):
-        pass
+        self.schedule.append(Mass(1, 1, 1, 2, self))
 
     def run(self):
         # game loop - set self.playing = False to end the game
@@ -173,6 +173,9 @@ class Game:
         if now - self.last_update > CLOCK_UPDATE:
             self.last_update = now
             self.gameTime.update()
+            for event in self.schedule:
+                if self.gameTime == event.startTime:
+                    event.startEvent()
 
     def increaseDay(self):
         self.daysRunning += 1
