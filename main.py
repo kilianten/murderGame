@@ -84,7 +84,7 @@ class Game:
 
     def new(self):
         # initialize all variables and do all the setup for a new game
-        self.all_sprites = pg.sprite.Group()
+        self.all_sprites = pg.sprite.LayeredUpdates()
         self.walls = pg.sprite.Group()
         self.collidable_sprites = pg.sprite.Group()
         self.townspeople = pg.sprite.Group()
@@ -105,7 +105,7 @@ class Game:
                     self.alter = Alter(self, x, y)
 
     def generateEvents(self):
-        self.schedule.append(Mass(1, 1, 1, 2, self))
+        self.schedule.append(Mass(1, 0, 1, 2, self))
 
     def run(self):
         # game loop - set self.playing = False to end the game
@@ -139,7 +139,7 @@ class Game:
         if self.HUDenabled == True:
             self.drawClock()
             self.drawDay()
-        if self.player.isTalking:
+        if self.player.state == "talking":
             self.screen.blit(self.conversation_hud_image, (0, (HEIGHT - self.conversation_hud_image.get_height())))
         if self.isDebugMode:
             self.debug()
@@ -158,7 +158,7 @@ class Game:
     def debug(self):
         self.drawGrid()
         for person in self.townspeople:
-            if person.isWalking:
+            if person.state == "walking":
                 person.drawPath()
             pg.draw.rect(self.screen, RED, person.rect.move(self.camera.camera.topleft), 1)
         for object in self.collidable_sprites:

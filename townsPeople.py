@@ -7,6 +7,7 @@ vec = pg.math.Vector2
 
 class Person(pg.sprite.Sprite):
     def __init__(self, game, x, y, image):
+        self._layer = 3
         self.groups = game.all_sprites, game.collidable_sprites, game.townspeople
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
@@ -14,7 +15,7 @@ class Person(pg.sprite.Sprite):
         self.last_update = 0
         self.grid = None
         self.path = None
-        self.isWalking = False
+        self.state = "idle"
         self.x = x
         self.y = y
         self.image = image
@@ -25,20 +26,27 @@ class Person(pg.sprite.Sprite):
         self.pos = vec(int(self.x/TILESIZE), int(self.y/TILESIZE))
         self.isNotInRush = True
         self.isAlive = True
+        self.desire = "idle"
+        self.offsetImageX = 0
+        self.offsetImageY = 0
 
     def vec2int(self, v):
         return (int(v.x), int(v.y))
 
     def update(self):
-        if self.isWalking:
+        if self.state == "walking":
             if self.journey.update(self.pos) == False:
-                self.isWalking == False
+                self.state = "idle"
             else :
                 self.moveCharacter(self.journey.update(self.pos))
+        self.x = self.pos.x * 64
+        self.y = self.pos.y * 64
+        self.rect.x = self.x - (TILESIZE / 2) + self.offsetImageX
+        self.rect.y = self.y - TILESIZE + self.offsetImageY
 
     def startJourney(self, start, destination, game):
         self.journey = Journey(start, destination, game)
-        self.isWalking = True
+        self.state = "walking"
 
     def drawPath(self):
         for node in self.journey.path:

@@ -6,6 +6,7 @@ vec = pg.math.Vector2
 
 class Player(pg.sprite.Sprite):
     def __init__(self, game, x, y):
+        self._layer = int(y)
         self.groups = game.all_sprites
         pg.sprite.Sprite.__init__(self, self.groups)
         self.vx, self.vx = 0, 0
@@ -24,7 +25,7 @@ class Player(pg.sprite.Sprite):
         self.hitbox.setDimensions(-70,-80)
         self.isDebugModePressed = False
         self.visionRect = None
-        self.isTalking = False
+        self.state = "idle"
 
     def get_keys(self):
         self.vx, self.vy = 0, 0
@@ -58,9 +59,9 @@ class Player(pg.sprite.Sprite):
             self.visionRect = pg.Rect((vec((self.pos) * TILESIZE) + (vec(self.dir) * 64)), (TILESIZE * 2, TILESIZE * 2))
             for person in self.game.townspeople:
                 if self.visionRect.colliderect(person.rect) and person.isNotInRush:
-                    person.isTalking = True
+                    person.state = "talking"
                     person.isWalking = False
-                    self.isTalking = True
+                    self.state = "talking"
                     self.game.isInChatMode = True
                     person.createSpeechBubble()
 
@@ -97,7 +98,7 @@ class Player(pg.sprite.Sprite):
         self.hitbox.setPosition(self.rect.center, 0, PLAYER_HITBOX_OFFSET)
         self.pos = vec(int(self.hitbox.rect.center[0] / TILESIZE), int(self.hitbox.rect.center[1] / TILESIZE))
         self.pos = vec(self.pos)
-
+        self.game.all_sprites.change_layer(self, int(self.y))
 
     def animate(self):
         now = pg.time.get_ticks()
@@ -134,6 +135,7 @@ class Player(pg.sprite.Sprite):
 
 class Wall(pg.sprite.Sprite):
     def __init__(self, game, x, y):
+        self._layer = int(y)
         self.groups = game.all_sprites, game.walls
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
@@ -146,6 +148,7 @@ class Wall(pg.sprite.Sprite):
 
 class Alter(pg.sprite.Sprite):
     def __init__(self, game, x, y):
+        self._layer = 5
         self.groups = game.all_sprites, game.collidable_sprites
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
@@ -157,16 +160,20 @@ class Alter(pg.sprite.Sprite):
         self.hitbox = Hitbox(self.rect)
         self.hitbox.setDimensions(0,-50)
         self.hitbox.rect.bottomleft = self.rect.bottomleft
+        print("LAYER ALTER")
+        print(self._layer)
 
 
 class AcousticGuitar(pg.sprite.Sprite):
     def __init__(self, game, x, y):
+        self._layer = int(y)
         self.groups = game.all_sprites
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
         self.image = game.acoustic_guitar
         self.x = x
         self.y = y
+        self._layer = y
         self.rect = self.image.get_rect()
         self.rect.x =  x
         self.rect.y =  y

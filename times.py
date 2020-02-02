@@ -85,3 +85,4 @@ class Mass(Event):
     def startEvent(self):
         if self.game.priest.isAlive == True:
             self.game.priest.startJourney(vec(self.game.priest.pos), vec(self.game.alter.x, self.game.alter.y), self.game)
+            self.game.priest.desire = "readMass"

@@ -12,15 +12,22 @@ class Priest(Person):
     def update(self):
         super().update()
         self.animate()
+        if self.desire == "readMass" and pg.sprite.collide_rect(self, self.game.alter):
+            self.state = "readingMass"
+            self.desire = "idle"
+            self.pos = vec(self.game.alter.x, self.game.alter.y)
+            self.offsetImageX = -32
+            self.offsetImageY = -66
+
 
     def animate(self):
         now = pg.time.get_ticks()
-        if self.isReadingMass: #walking S towards player
+        if self.state == "readingMass": #walking S towards player
             if now - self.last_update > WALKING_ANIMATION_UPDATE_TIME:
                 self.last_update = now
                 self.image = self.getReadingMassAnimation();
         else:
-            self.image = game.priest_img
+            self.image = self.game.priest_img
 
     def getReadingMassAnimation(self):
         self.current_frame = (self.current_frame + 1) % len(self.game.priestReadingAnimation)
