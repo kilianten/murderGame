@@ -72,7 +72,7 @@ class Person(pg.sprite.Sprite):
         self.rect.y = self.y - TILESIZE
 
     def createSpeechBubble(self):
-        self.SpeechBubble =  SpeechBubble(self.x + TILESIZE, self.y - (TILESIZE * 2), self.game)
+        self.SpeechBubble =  SpeechBubble(self.x + TILESIZE + self.offsetImageX, self.y - (TILESIZE * 2) +  self.offsetImageY, self.game)
 
 class Journey:
     def __init__(self, start, destination, game):
