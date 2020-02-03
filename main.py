@@ -38,6 +38,7 @@ class Game:
         self.gameTime = DateTime(0, 0, 1)
         self.schedule = []
         self.generateEvents()
+        self.runningEvents = []
 
     def load_settings(self):
         print("Loading Settings")
@@ -173,9 +174,15 @@ class Game:
         if now - self.last_update > CLOCK_UPDATE:
             self.last_update = now
             self.gameTime.update()
+            print(self.runningEvents)
             for event in self.schedule:
                 if self.gameTime == event.startTime:
                     event.startEvent()
+                    self.runningEvents.append(event)
+                    print(self.runningEvents)
+                if self.gameTime == event.startTime:
+                    self.runningEvents.remove(event)
+                    self.schedule.remove(event)
 
     def increaseDay(self):
         self.daysRunning += 1
