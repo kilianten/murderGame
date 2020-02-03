@@ -10,10 +10,14 @@ HOURS_IN_DAY = 24
 class Event:
     def __init__(self, minute, hour, date, duration, game):
         self.startTime = DateTime(minute, hour, date)
-        self.endTime = DateTime(minute, hour, date) + duration
+        self.endTime = DateTime(self.startTime + duration)
+        print(self.endTime.getMinutes())
         self.duration = duration
         self.game = game
         self.attendees = []
+
+    def endEvent(self):
+        pass
 
 class DateTime:
     def __init__(self, minute, hour=None, date=None):
@@ -65,6 +69,8 @@ class DateTime:
     def __add__(self, other):
         if isinstance(other, DateTime):
             return self.getMinutes() + other.getMinutes()
+        elif other == int(other):
+            return self.getMinutes() + other
         return False
 
 class Schedule:
@@ -85,10 +91,13 @@ class Mass(Event):
 
     def startEvent(self):
         if self.game.priest.isAlive == True:
-            self.attendees.append(self.game.priest)
-            self.game.priest.startJourney(vec(self.game.priest.pos), vec(self.game.alter.x, self.game.alter.y), self.game)
-            self.game.priest.desire = "readMass"
+            self.priest = self.game.priest
+            self.priest.startJourney(vec(self.priest.pos), vec(self.game.alter.x, self.game.alter.y), self.game)
+            self.priest.desire = "readMass"
 
 
     def update(self):
         pass
+
+    def endEvent(self):
+        self.priest.state = "idle"

@@ -106,7 +106,7 @@ class Game:
                     self.alter = Alter(self, x, y)
 
     def generateEvents(self):
-        self.schedule.append(Mass(1, 0, 1, 2, self))
+        self.schedule.append(Mass(1, 0, 1, 60, self))
 
     def run(self):
         # game loop - set self.playing = False to end the game
@@ -180,7 +180,8 @@ class Game:
                     event.startEvent()
                     self.runningEvents.append(event)
                     print(self.runningEvents)
-                if self.gameTime == event.startTime:
+                if self.gameTime == event.endTime:
+                    event.endEvent()
                     self.runningEvents.remove(event)
                     self.schedule.remove(event)
 
